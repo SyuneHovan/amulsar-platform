@@ -1,0 +1,26 @@
+[
+  {
+    "id": "amulsar",
+    "name": "Ամուլսար (մոտավոր տեղադիրք)",
+    "lat": 39.748,
+    "lng": 45.64,
+    "description": "Մոտավոր տեղադիրք․ ոչ գործող աշխատանքների կամ հանքի սահմանների հաստատում։",
+    "source": "https://www.ebrd.com/home/work-with-us/projects/psd/48579.html"
+  },
+  {
+    "id": "jermuk",
+    "name": "Ջերմուկ",
+    "lat": 39.8417,
+    "lng": 45.6695,
+    "description": "Բնակավայրի մոտավոր կենտրոն։",
+    "source": "https://www.openstreetmap.org/"
+  },
+  {
+    "id": "kechut",
+    "name": "Կեչուտի ջրամբար",
+    "lat": 39.826,
+    "lng": 45.674,
+    "description": "Ջրամբարի մոտավոր տեղադիրք։",
+    "source": "https://www.openstreetmap.org/"
+  }
+]
