@@ -63,3 +63,9 @@
 .brand span{min-width:0}.brand b{display:block;line-height:1.25}.brand small{line-height:1.35}
 @media(max-width:800px){.brand{gap:7px}.brand b{font-size:13px;letter-spacing:.015em}.brand small{font-size:7px;letter-spacing:.035em}.nav-actions{gap:5px}}
 @media(max-width:390px){.brand img{width:35px;height:39px}.brand b{font-size:11px}.brand small{font-size:6px}.theme-switch button{min-width:26px;padding:0 4px}}
+
+/* Soft, unobtrusive moon: keep it behind the copy and away from mobile headlines. */
+[data-theme="dark"] .sun{width:290px;height:290px;top:9%;right:10%;background:#f4e8c3;opacity:.24;box-shadow:0 0 90px #f2e5b52b,0 0 150px #f6e6b018}
+[data-theme="dark"] .sun:after{width:260px;height:260px;top:-38px;left:70px;background:#19283d}
+@media(max-width:800px){[data-theme="dark"] .sun{width:210px;height:210px;top:48%;right:-70px;opacity:.2}[data-theme="dark"] .sun:after{width:190px;height:190px;top:-30px;left:54px}}
+@media(max-width:420px){[data-theme="dark"] .sun{top:53%;right:-85px;opacity:.17}}
