@@ -42,7 +42,7 @@ async function removeItem(type,itemId){
   if(index<0)return null;
   const [removed]=items.splice(index,1);
   try{
-   await gh(datasets[type],{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:'Remove '+type+' via Telegram bot',content:encode(JSON.stringify(items,null,2)+'\\n'),sha:current.sha,branch:'main'})});
+   await gh(datasets[type],{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:'Remove '+type+' via Telegram bot',content:encode(JSON.stringify(items,null,2)+'\n'),sha:current.sha,branch:'main'})});
    return removed;
   }catch(e){if((!String(e).includes('409')&&!String(e).includes('422'))||attempt===2)throw e}
  }
@@ -50,7 +50,7 @@ async function removeItem(type,itemId){
 async function deletionList(type){
  const {items}=await loadItems(type);
  if(!items.length)return names[type]+': նյութեր չկան։';
- return names[type]+' (վերջին 15)՝\\n\\n'+items.slice(0,15).map((x,i)=>(i+1)+'. '+x.title+'\\n/delete '+type+' '+x.id).join('\\n\\n')+'\\n\\nՋնջելու համար ուղարկիր համապատասխան /delete հրամանը։';
+ return names[type]+' (վերջին 15)՝\n\n'+items.slice(0,15).map((x,i)=>(i+1)+'. '+x.title+'\n/delete '+type+' '+x.id).join('\n\n')+'\n\nՋնջելու համար ուղարկիր համապատասխան /delete հրամանը։';
 }
 export default async function handler(req,res){
  if(req.method!=='POST')return res.status(405).json({error:'Method not allowed'});
@@ -62,21 +62,21 @@ export default async function handler(req,res){
  if(!allowed().has(id)&&!admins().has(id)){await reply(chat,'Այս բոտի խմբագիրների ցանկում չկաս։ Ուղարկիր քո ID-ն ադմինին՝ '+id);return res.status(200).json({ok:true})}
  if(text==='/delete'||text==='/delete@AmulsarContentBot'){
   if(!admins().has(id)){await reply(chat,'⛔ Ջնջել կարող է միայն ադմինը։');return res.status(200).json({ok:true})}
-  await reply(chat,'Ընտրիր բաժինը՝\\n/delete news — նորություններ\\n/delete event — միջոցառումներ\\n/delete document — փաստաթղթեր');
+  await reply(chat,'Ընտրիր բաժինը՝\n/delete news — նորություններ\n/delete event — միջոցառումներ\n/delete document — փաստաթղթեր');
   return res.status(200).json({ok:true})
  }
  if(text.startsWith('/delete ')||text.startsWith('/confirmdelete ')){
   if(!admins().has(id)){await reply(chat,'⛔ Ջնջել կարող է միայն ադմինը։');return res.status(200).json({ok:true})}
-  const parts=text.split(/\\s+/),type=parts[1],itemId=parts[2];
+  const parts=text.split(/\s+/),type=parts[1],itemId=parts[2];
   if(!datasets[type]){await reply(chat,'Բաժինը սխալ է։ Օգտագործիր /delete');return res.status(200).json({ok:true})}
   if(!itemId){await reply(chat,await deletionList(type));return res.status(200).json({ok:true})}
   if(!/^[0-9a-f-]{36}$/i.test(itemId)){await reply(chat,'Նյութի ID-ն սխալ է։');return res.status(200).json({ok:true})}
   if(parts[0]==='/delete'){
    const {items}=await loadItems(type),item=items.find(x=>x.id===itemId);
-   await reply(chat,item?'⚠️ Վստա՞հ ես, որ ուզում ես ջնջել «'+item.title+'» նյութը։\\n\\nՀաստատելու համար ուղարկիր՝\\n/confirmdelete '+type+' '+itemId:'Նյութը չգտնվեց։');
+   await reply(chat,item?'⚠️ Վստա՞հ ես, որ ուզում ես ջնջել «'+item.title+'» նյութը։\n\nՀաստատելու համար ուղարկիր՝\n/confirmdelete '+type+' '+itemId:'Նյութը չգտնվեց։');
   }else{
    const removed=await removeItem(type,itemId);
-   await reply(chat,removed?'✅ Ջնջվեց՝ '+removed.title+'\\nՓոփոխությունը կայքում կհայտնվի Vercel-ի հաջորդ հրապարակումից հետո։':'Նյութն արդեն ջնջված է կամ չի գտնվել։');
+   await reply(chat,removed?'✅ Ջնջվեց՝ '+removed.title+'\nՓոփոխությունը կայքում կհայտնվի Vercel-ի հաջորդ հրապարակումից հետո։':'Նյութն արդեն ջնջված է կամ չի գտնվել։');
   }
   return res.status(200).json({ok:true})
  }
