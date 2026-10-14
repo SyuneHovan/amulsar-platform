@@ -107,3 +107,8 @@
 [data-theme="dark"] .hero-art .sun{width:145px!important;height:145px!important;top:11%!important;right:13%!important;opacity:.22!important;background:#eee7d4!important;box-shadow:0 0 35px #eee7d422!important;animation:none!important}
 [data-theme="dark"] .hero-art .sun:after{width:133px!important;height:133px!important;top:-17px!important;left:38px!important;background:#192940!important}
 @media(max-width:800px){[data-theme="dark"] .hero-art .sun{width:110px!important;height:110px!important;top:46%!important;right:-34px!important;opacity:.16!important}[data-theme="dark"] .hero-art .sun:after{width:100px!important;height:100px!important;top:-13px!important;left:28px!important}}
+
+/* Official source map: clear distinction between pit and project infrastructure */
+.official-map-icon{background:transparent;border:0}
+.official-map-pin{display:flex;align-items:center;justify-content:center;width:28px;height:28px;border:2px solid #fff;border-radius:50%;background:#315d73;color:#fff;font-size:13px;box-shadow:0 2px 10px #0007}
+.official-pit-pin{background:#ae473b;font-size:14px}
