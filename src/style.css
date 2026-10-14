@@ -54,3 +54,7 @@
 [data-theme="dark"] .footer{background:#0b171c}
 @media(max-width:800px){[data-theme="dark"] .nav-links{background:#172b35;box-shadow:0 20px 25px #0005}[data-theme="dark"] .nav-links>a{border-color:#3b4c55}}
 @keyframes moonfloat{50%{transform:translateY(12px)}}
+
+/* Adapt the red mountain logo to the cool night palette; keep the original by day. */
+.brand img,.hero-stamp img{transition:filter .35s ease}
+[data-theme="dark"] .brand img,[data-theme="dark"] .hero-stamp img{filter:brightness(0) saturate(100%) invert(87%) sepia(15%) saturate(400%) hue-rotate(351deg) brightness(104%) contrast(92%)}
