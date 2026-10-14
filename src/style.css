@@ -58,3 +58,8 @@
 /* Adapt the red mountain logo to the cool night palette; keep the original by day. */
 .brand img,.hero-stamp img{transition:filter .35s ease}
 [data-theme="dark"] .brand img,[data-theme="dark"] .hero-stamp img{filter:brightness(0) saturate(100%) invert(87%) sepia(15%) saturate(400%) hue-rotate(351deg) brightness(104%) contrast(92%)}
+
+/* Longer movement name in compact navigation */
+.brand span{min-width:0}.brand b{display:block;line-height:1.25}.brand small{line-height:1.35}
+@media(max-width:800px){.brand{gap:7px}.brand b{font-size:13px;letter-spacing:.015em}.brand small{font-size:7px;letter-spacing:.035em}.nav-actions{gap:5px}}
+@media(max-width:390px){.brand img{width:35px;height:39px}.brand b{font-size:11px}.brand small{font-size:6px}.theme-switch button{min-width:26px;padding:0 4px}}
