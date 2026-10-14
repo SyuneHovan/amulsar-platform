@@ -79,3 +79,8 @@
 [data-theme="dark"] .sun{width:300px;height:300px;top:9%;right:8%;opacity:.27;background:#eee4c8;box-shadow:0 0 70px #eee4c81b,0 0 145px #eee4c80d}
 [data-theme="dark"] .sun:after{width:280px;height:280px;top:-40px;left:78px;background:#17263c}
 @media(max-width:800px){[data-theme="dark"] .sun{width:220px;height:220px;top:42%;right:-65px;opacity:.2}[data-theme="dark"] .sun:after{width:205px;height:205px;top:-30px;left:60px}}
+
+/* Gentle, translucent moon positioned away from the hero copy */
+[data-theme="dark"] .sun{width:250px;height:250px;top:12%;right:8%;opacity:.28;background:#e9e3d2;box-shadow:0 0 65px #e8e2c33b,0 0 125px #e8e2c31c}
+[data-theme="dark"] .sun:after{width:226px;height:226px;top:-27px;left:65px;background:#192940}
+@media(max-width:800px){[data-theme="dark"] .sun{width:190px;height:190px;top:49%;right:-72px;opacity:.22}[data-theme="dark"] .sun:after{width:175px;height:175px;top:-22px;left:50px}}
