@@ -74,3 +74,8 @@
 [data-theme="dark"] .sun{width:300px;height:300px;top:10%;right:9%;opacity:.34;background:#e5dfc6;box-shadow:0 0 75px #e6e6c21f,0 0 145px #f6e6b00d}
 [data-theme="dark"] .sun:after{width:270px;height:270px;top:-32px;left:70px;background:#17263c}
 @media(max-width:800px){[data-theme="dark"] .sun{width:225px;height:225px;top:47%;right:-45px;opacity:.27}[data-theme="dark"] .sun:after{width:205px;height:205px;top:-25px;left:52px}}
+
+/* Soft, unobtrusive moon: behind copy, with daylight-like translucency */
+[data-theme="dark"] .sun{width:300px;height:300px;top:9%;right:8%;opacity:.27;background:#eee4c8;box-shadow:0 0 70px #eee4c81b,0 0 145px #eee4c80d}
+[data-theme="dark"] .sun:after{width:280px;height:280px;top:-40px;left:78px;background:#17263c}
+@media(max-width:800px){[data-theme="dark"] .sun{width:220px;height:220px;top:42%;right:-65px;opacity:.2}[data-theme="dark"] .sun:after{width:205px;height:205px;top:-30px;left:60px}}
