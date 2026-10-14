@@ -5,7 +5,9 @@ const REPO=process.env.GITHUB_REPO||'SyuneHovan/amulsar-platform';
 const allowed=()=>new Set((process.env.TELEGRAM_EDITOR_IDS||'').split(',').map(x=>x.trim()).filter(Boolean));
 const admins=()=>new Set((process.env.TELEGRAM_ADMIN_IDS||'').split(',').map(x=>x.trim()).filter(Boolean));
 const tg=async(method,body)=>{const r=await fetch('https://api.telegram.org/bot'+TOKEN+'/'+method,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});if(!r.ok)throw new Error('Telegram '+r.status);return r.json()};
-const reply=(chat_id,text)=>tg('sendMessage',{chat_id,text,disable_web_page_preview:true});
+const reply=(chat_id,text,html=false)=>tg('sendMessage',{chat_id,text,disable_web_page_preview:true,...(html?{parse_mode:'HTML'}:{})});
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const mono=s=>'<code>'+esc(s)+'</code>';
 const menu='Բարև 🌱\n\n/news — նորություն\n/event — ակցիա կամ միջոցառում\n/document — փաստաթուղթ\n/delete — նյութերի ցանկ և ջնջում (ադմին)\n/id — քո Telegram ID-ն\n\nԲոտը հասանելի է միայն թույլատրված խմբագիրներին։';
 const templates={
 news:'Նորություն\nՎերնագիր: \nԱմսաթիվ: 2026-10-15\nՆկարագրություն: \nԱղբյուր: https://',
@@ -50,7 +52,7 @@ async function removeItem(type,itemId){
 async function deletionList(type){
  const {items}=await loadItems(type);
  if(!items.length)return names[type]+': նյութեր չկան։';
- return names[type]+' (վերջին 15)՝\n\n'+items.slice(0,15).map((x,i)=>(i+1)+'. '+x.title+'\n/delete '+type+' '+x.id).join('\n\n')+'\n\nՋնջելու համար ուղարկիր համապատասխան /delete հրամանը։';
+ return names[type]+' (վերջին 15)՝\n\n'+items.slice(0,15).map((x,i)=>(i+1)+'. '+esc(x.title)+'\n'+mono('/delete '+type+' '+x.id)).join('\n\n')+'\n\nՀպիր հրամանին՝ պատճենելու համար։';
 }
 export default async function handler(req,res){
  if(req.method!=='POST')return res.status(405).json({error:'Method not allowed'});
@@ -62,18 +64,18 @@ export default async function handler(req,res){
  if(!allowed().has(id)&&!admins().has(id)){await reply(chat,'Այս բոտի խմբագիրների ցանկում չկաս։ Ուղարկիր քո ID-ն ադմինին՝ '+id);return res.status(200).json({ok:true})}
  if(text==='/delete'||text==='/delete@AmulsarContentBot'){
   if(!admins().has(id)){await reply(chat,'⛔ Ջնջել կարող է միայն ադմինը։');return res.status(200).json({ok:true})}
-  await reply(chat,'Ընտրիր բաժինը՝\n/delete news — նորություններ\n/delete event — միջոցառումներ\n/delete document — փաստաթղթեր');
+  await reply(chat,'Ընտրիր բաժինը՝\n'+mono('/delete news')+' — նորություններ\n'+mono('/delete event')+' — միջոցառումներ\n'+mono('/delete document')+' — փաստաթղթեր',true);
   return res.status(200).json({ok:true})
  }
  if(text.startsWith('/delete ')||text.startsWith('/confirmdelete ')){
   if(!admins().has(id)){await reply(chat,'⛔ Ջնջել կարող է միայն ադմինը։');return res.status(200).json({ok:true})}
   const parts=text.split(/\s+/),type=parts[1],itemId=parts[2];
   if(!datasets[type]){await reply(chat,'Բաժինը սխալ է։ Օգտագործիր /delete');return res.status(200).json({ok:true})}
-  if(!itemId){await reply(chat,await deletionList(type));return res.status(200).json({ok:true})}
+  if(!itemId){await reply(chat,await deletionList(type),true);return res.status(200).json({ok:true})}
   if(!/^[0-9a-f-]{36}$/i.test(itemId)){await reply(chat,'Նյութի ID-ն սխալ է։');return res.status(200).json({ok:true})}
   if(parts[0]==='/delete'){
    const {items}=await loadItems(type),item=items.find(x=>x.id===itemId);
-   await reply(chat,item?'⚠️ Վստա՞հ ես, որ ուզում ես ջնջել «'+item.title+'» նյութը։\n\nՀաստատելու համար ուղարկիր՝\n/confirmdelete '+type+' '+itemId:'Նյութը չգտնվեց։');
+   await reply(chat,item?'⚠️ Վստա՞հ ես, որ ուզում ես ջնջել «'+esc(item.title)+'» նյութը։\n\nՀաստատելու համար պատճենիր՝\n'+mono('/confirmdelete '+type+' '+itemId):'Նյութը չգտնվեց։',true);
   }else{
    const removed=await removeItem(type,itemId);
    await reply(chat,removed?'✅ Ջնջվեց՝ '+removed.title+'\nՓոփոխությունը կայքում կհայտնվի Vercel-ի հաջորդ հրապարակումից հետո։':'Նյութն արդեն ջնջված է կամ չի գտնվել։');
@@ -82,7 +84,7 @@ export default async function handler(req,res){
  }
  if(text==='/start'||text==='/help'){await reply(chat,menu);return res.status(200).json({ok:true})}
  const cmd=text.split('@')[0];
- if(cmd==='/news'||cmd==='/event'||cmd==='/document'){await reply(chat,'Պատճենիր այս ձևանմուշը, լրացրու և ուղարկիր որպես մեկ հաղորդագրություն։\n\n'+templates[cmd.slice(1)]+'\n\n⚠️ Ուղարկելուց հետո նյութը անմիջապես կհրապարակվի։');return res.status(200).json({ok:true})}
+ if(cmd==='/news'||cmd==='/event'||cmd==='/document'){await reply(chat,'Պատճենիր ձևանմուշը, լրացրու և ուղարկիր որպես մեկ հաղորդագրություն։\n\n<pre>'+esc(templates[cmd.slice(1)])+'</pre>\n\n⚠️ Ուղարկելուց հետո նյութը անմիջապես կհրապարակվի։',true);return res.status(200).json({ok:true})}
  const parsed=parse(text);if(!parsed){await reply(chat,menu);return res.status(200).json({ok:true})}
  await publish(parsed.file,parsed.item);await reply(chat,'✅ Նյութը ավելացվեց GitHub-ում։ Vercel-ի հրապարակումից հետո այն կհայտնվի կայքում։\n\n'+parsed.item.title);
  return res.status(200).json({ok:true})
