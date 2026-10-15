@@ -296,3 +296,10 @@
 .imagery-panel .research-base{margin:12px 0}
 .imagery-location-note{padding-top:10px;border-top:1px solid #aaa5;font-size:12px}
 @media(max-width:650px){.imagery-detail{left:8px;right:8px;bottom:38px;max-height:54vh;padding:13px}.imagery-tabs button{font-size:11px}}
+
+/* Simple map basemap switcher */
+.simple-map-layers{position:absolute;z-index:1100;top:12px;left:12px;display:flex;flex-wrap:wrap;gap:4px;max-width:calc(100% - 160px);padding:4px;border:1px solid #b9c5bd;border-radius:10px;background:#fff;box-shadow:0 2px 8px #0002}
+.simple-map-layers button{border:0;border-radius:7px;padding:8px 10px;font:inherit;font-size:12px;font-weight:700;white-space:nowrap;background:transparent;color:#18362e;cursor:pointer}
+.simple-map-layers button.active{background:#244e3e;color:#fff}
+.simple-map-layers button:focus-visible{outline:2px solid #c34840;outline-offset:1px}
+@media(max-width:650px){.simple-map-layers{top:8px;left:8px;max-width:calc(100% - 105px);gap:2px}.simple-map-layers button{font-size:10px;padding:7px 6px}}
