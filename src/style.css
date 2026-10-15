@@ -163,3 +163,7 @@
 .admin-wrap .admin-manual-toggle{font-size:12px;color:var(--admin-muted)!important;text-decoration:none;border-bottom:1px dashed currentColor;padding:8px}
 .admin-wrap .admin-card-actions{justify-content:flex-end}.admin-wrap .admin-card-actions button{width:42px;height:40px;flex:0 0 42px!important;font-size:20px!important;padding:0!important;display:grid;place-items:center}.admin-wrap .admin-card-actions .admin-delete{margin-left:4px}
 @media(max-width:600px){.admin-wrap .admin-link-controls{flex-direction:column}.admin-wrap .admin-link-controls button{width:100%}}
+
+/* Editorial fact-check label on rejected public news */
+.false-news-badge{display:inline-flex;align-items:center;padding:5px 10px;border-radius:6px;border:1px solid #c67878;background:#fce7e5;color:#963a39;font-size:11px;font-weight:800;letter-spacing:.025em}
+[data-theme="dark"] .false-news-badge{background:#4b292c;border-color:#a55e62;color:#ffd2d2}
