@@ -344,3 +344,9 @@
 .map-frame .leaflet-control-zoom{border-radius:999px!important}
 .map-frame .leaflet-control-zoom a:first-child{border-radius:999px 999px 0 0!important}
 .map-frame .leaflet-control-zoom a:last-child{border-radius:0 0 999px 999px!important}
+
+/* Icon-only map mode switcher */
+.map-frame .simple-map-layers{gap:3px}
+.map-frame .simple-map-layers button{display:inline-flex;align-items:center;justify-content:center;width:38px;height:36px;padding:0!important;line-height:1;border-radius:999px}
+.map-frame .simple-map-layers button svg{display:block;width:19px;height:19px;stroke:currentColor;flex:none}
+@media(max-width:650px){.map-frame .simple-map-layers button{width:34px;height:32px}.map-frame .simple-map-layers button svg{width:18px;height:18px}}
