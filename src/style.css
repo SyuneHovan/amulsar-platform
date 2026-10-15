@@ -123,3 +123,7 @@
 .footer-social a{color:inherit;text-decoration:none;opacity:.85;font-size:14px;transition:opacity .2s}
 .footer-social a:hover,.footer-social a:focus-visible{opacity:1;text-decoration:underline;text-underline-offset:4px}
 @media(max-width:680px){.footer-social{margin-top:18px;gap:12px}.footer-social a{padding:4px 0}}
+
+/* News moderation labels */
+.news-tags{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:12px 0 14px}
+.news-tags .unverified-badge,.news-tags .news-source-type{display:inline-flex;align-items:center;margin:0;max-width:100%;line-height:1.35}
