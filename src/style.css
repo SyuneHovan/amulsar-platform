@@ -361,3 +361,6 @@
 .learn-mosaic .learn-card .tag{background:rgba(255,255,255,.12);border-color:currentColor}
 .learn-mosaic .learn-card-1 .tag,.learn-mosaic .learn-card-2 .tag,.learn-mosaic .learn-card-4 .tag,.learn-mosaic .learn-card-5 .tag,.learn-mosaic .learn-card-6 .tag,.learn-mosaic .learn-card-7 .tag{background:rgba(255,255,255,.35)}
 [data-theme="dark"] .learn-mosaic .learn-card{filter:none}
+
+/* Learning topic labels: plain text, no outline or box */
+.learn-mosaic .learn-card .tag{border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;padding:0!important;text-decoration:none!important;outline:0!important}
