@@ -338,3 +338,9 @@
 .map-frame>.map-expand:focus-visible,.map-frame .simple-map-layers button:focus-visible,.map-frame .leaflet-control-zoom a:focus-visible{outline:2px solid #5c9077;outline-offset:2px}
 @media(max-width:650px){.map-frame .leaflet-top.leaflet-left{top:8px;left:8px}.map-frame .leaflet-control-zoom a{width:30px!important;height:30px!important;line-height:29px!important;font-size:18px!important}.map-frame>.map-expand{top:9px;right:8px;min-height:32px;padding:8px 9px;font-size:10px}.map-frame .simple-map-layers{top:9px;max-width:calc(100% - 126px)}.map-frame .simple-map-layers button{font-size:10px;padding:7px 7px}}
 @media(max-width:390px){.map-frame .simple-map-layers{top:53px;max-width:calc(100% - 18px)}}
+
+/* Consistent pill silhouette across map controls */
+.map-frame>.map-expand{border-radius:999px!important}
+.map-frame .leaflet-control-zoom{border-radius:999px!important}
+.map-frame .leaflet-control-zoom a:first-child{border-radius:999px 999px 0 0!important}
+.map-frame .leaflet-control-zoom a:last-child{border-radius:0 0 999px 999px!important}
