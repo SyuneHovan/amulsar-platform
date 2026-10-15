@@ -271,3 +271,16 @@
 .research-map .research-map-head .map-expand{position:relative!important;top:auto!important;right:auto!important;left:auto!important;bottom:auto!important;transform:none!important;z-index:1!important;flex-shrink:0;margin:0!important}
 .research-map .research-map-head>div{min-width:0;flex:1}
 @media(max-width:480px){.research-map .research-map-head{flex-wrap:wrap}.research-map .research-map-head .map-expand{margin-left:auto!important}}
+
+.mine-facts{padding:24px;border-top:1px solid #9c958433}
+.mine-facts h2{font-size:clamp(20px,2.4vw,27px);margin:12px 0}
+.mine-facts>p{font-size:13px;line-height:1.7;max-width:800px}
+.mine-facts-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:20px 0}
+.mine-facts-grid article{padding:20px;border:1px solid #9c958455;border-radius:14px;background:#a99c8112}
+.mine-facts-grid h3{font-size:17px;margin:0 0 14px}
+.mine-facts-grid b{font-size:22px;color:#9e4b36}
+.mine-facts-grid p{font-size:13px;margin:10px 0}
+.mine-facts-grid small{font-size:12px;opacity:.8}
+.mine-facts-links{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
+.mine-facts-links a{font-size:12px;font-weight:700;color:#43836b}
+@media(max-width:650px){.mine-facts{padding:16px}.mine-facts-grid{grid-template-columns:1fr}}
