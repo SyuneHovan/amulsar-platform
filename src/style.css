@@ -303,3 +303,12 @@
 .simple-map-layers button.active{background:#244e3e;color:#fff}
 .simple-map-layers button:focus-visible{outline:2px solid #c34840;outline-offset:1px}
 @media(max-width:650px){.simple-map-layers{top:8px;left:8px;max-width:calc(100% - 105px);gap:2px}.simple-map-layers button{font-size:10px;padding:7px 6px}}
+
+/* Lightweight basemap selector: clear of Leaflet zoom (+/-) and fullscreen controls */
+.map-frame .simple-map-layers{position:absolute;top:12px;left:50%;right:auto;transform:translateX(-50%);z-index:1000;display:flex;align-items:center;justify-content:center;flex-wrap:nowrap;gap:2px;width:max-content;max-width:calc(100% - 190px);padding:3px;border:1px solid rgba(90,112,99,.16);border-radius:999px;background:rgba(255,255,255,.92);box-shadow:0 2px 12px rgba(19,46,34,.07);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.map-frame .simple-map-layers button{appearance:none;border:0;border-radius:999px;padding:7px 12px;font-family:inherit;font-size:12px;font-weight:450;letter-spacing:0;line-height:1.35;white-space:nowrap;background:transparent;color:#52645b;box-shadow:none;cursor:pointer;transition:background .15s,color .15s}
+.map-frame .simple-map-layers button.active{background:#e6eee8;color:#1c4937;font-weight:600}
+.map-frame .simple-map-layers button:hover:not(.active){background:#f2f5f1;color:#1c4937}
+.map-frame .simple-map-layers button:focus-visible{outline:2px solid #578b73;outline-offset:1px}
+@media(max-width:650px){.map-frame .simple-map-layers{top:9px;left:50%;max-width:calc(100% - 112px);padding:2px;gap:0}.map-frame .simple-map-layers button{font-size:10px;font-weight:450;padding:7px 7px}.map-frame .simple-map-layers button.active{font-weight:600}}
+@media(max-width:390px){.map-frame .simple-map-layers{top:53px;max-width:calc(100% - 18px)}.map-frame .simple-map-layers button{font-size:11px;padding:7px 10px}}
