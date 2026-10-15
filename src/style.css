@@ -156,3 +156,10 @@
 [data-theme="dark"] .admin-wrap .admin-eyebrow{color:#e7a88b!important}
 [data-theme="dark"] .admin-wrap .admin-source{color:#f2ba96!important}
 [data-theme="dark"] .admin-wrap .admin-card-actions .admin-delete{border-color:#78909a!important}
+
+.admin-wrap .admin-link-form{display:grid;gap:10px;background:var(--admin-paper)!important;color:var(--admin-ink)!important;border:1px solid var(--admin-border);border-radius:18px;padding:20px;margin:0 0 22px}
+.admin-wrap .admin-link-form strong{font-size:19px}.admin-wrap .admin-link-form p{font-size:13px;color:var(--admin-muted)!important;margin:0 0 5px;line-height:1.6}
+.admin-wrap .admin-link-controls{display:flex;gap:9px;align-items:stretch}.admin-wrap .admin-link-controls input{flex:1;min-width:0;background:var(--admin-paper);color:var(--admin-ink);border:1px solid var(--admin-border);border-radius:12px;padding:12px;font:inherit}
+.admin-wrap .admin-manual-toggle{font-size:12px;color:var(--admin-muted)!important;text-decoration:none;border-bottom:1px dashed currentColor;padding:8px}
+.admin-wrap .admin-card-actions{justify-content:flex-end}.admin-wrap .admin-card-actions button{width:42px;height:40px;flex:0 0 42px!important;font-size:20px!important;padding:0!important;display:grid;place-items:center}.admin-wrap .admin-card-actions .admin-delete{margin-left:4px}
+@media(max-width:600px){.admin-wrap .admin-link-controls{flex-direction:column}.admin-wrap .admin-link-controls button{width:100%}}
