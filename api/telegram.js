@@ -60,11 +60,11 @@ const reviewKeyboard=(item)=>({inline_keyboard:[
  [{text:'🗑 Հեռացնել',callback_data:'review:delete:'+item.id}]
 ]});
 async function reviewList(chat,page=0){
- const {items}=await loadItems('news');const list=items.filter(x=>x.verificationStatus!=='false');
+ const {items}=await loadItems('news');const list=items;
  const start=Math.max(0,page)*8,chunk=list.slice(start,start+8);
  if(!chunk.length){await reply(chat,'Այս էջում լուրեր չկան։');return}
  for(const x of chunk){
-  const status=x.verificationStatus==='verified'?'✅ Ստուգված':'⏳ Չստուգված';
+  const status=x.verificationStatus==='verified'?'✅ Ստուգված':x.verificationStatus==='false'?'❌ Կեղծ':'⏳ Չստուգված';
   await tg('sendMessage',{chat_id:chat,text:status+' · '+(x.date||'')+'\n'+x.title.slice(0,220),reply_markup:reviewKeyboard(x)});
  }
  const buttons=[];if(start>0)buttons.push({text:'⬅️ Նախորդ',callback_data:'page:'+(page-1)});
@@ -97,7 +97,7 @@ export default async function handler(req,res){
   if(match){
    const action=match[1],itemId=match[2];
    if(action==='delete'&&!admins().has(user)){await answer('Ջնջել կարող է միայն ադմինը');return res.status(200).json({ok:true})}
-   if(action==='delete'&&!cb.data.startsWith('review:delete-confirm:')){
+   if(action==='delete'){
     await answer('Հաստատիր ջնջումը');
     await tg('sendMessage',{chat_id:chat,text:'⚠️ Վստա՞հ ես, որ ուզում ես ջնջել այս լուրը։',reply_markup:{inline_keyboard:[[{text:'🗑 Այո, ջնջել',callback_data:'confirm:'+itemId},{text:'Չեղարկել',callback_data:'cancel'}]]}});
     return res.status(200).json({ok:true})
