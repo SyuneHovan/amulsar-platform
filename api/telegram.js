@@ -59,7 +59,7 @@ const reviewKeyboard=(item)=>({inline_keyboard:[
  [{text:'✅ Ստուգված',callback_data:'review:verified:'+item.id},{text:'❌ Կեղծ',callback_data:'review:false:'+item.id}],
  [{text:'🗑 Հեռացնել',callback_data:'review:delete:'+item.id},{text:'⏭ Հաջորդը',callback_data:'review:skip:'+item.id}]
 ]});
-const pendingNews=items=>items.filter(x=>x.verificationStatus!=='verified'&&x.verificationStatus!=='false'&&x.generatedByAI===true);
+const pendingNews=items=>items.filter(x=>x.verificationStatus!=='verified'&&x.verificationStatus!=='false'&&(x.generatedByAI===true||x.verificationStatus==='unverified'));
 async function reviewNext(chat,excludeId=null){
  const {items}=await loadItems('news');
  const next=pendingNews(items).find(x=>x.id!==excludeId);
@@ -85,6 +85,7 @@ export default async function handler(req,res){
  if(req.headers['x-telegram-bot-api-secret-token']!==SECRET)return res.status(403).json({error:'Forbidden'});
  try{
  const cb=req.body?.callback_query;
+ if(cb)console.log('Telegram review callback',cb.data,'user',cb.from?.id);
  if(cb){
   const user=String(cb.from?.id||''),chat=cb.message?.chat?.id,valid=allowed().has(user)||admins().has(user);
   const answer=async message=>tg('answerCallbackQuery',{callback_query_id:cb.id,text:message,show_alert:false});
@@ -155,5 +156,5 @@ export default async function handler(req,res){
  const parsed=parse(text);if(!parsed){await reply(chat,menu);return res.status(200).json({ok:true})}
  await publish(parsed.file,parsed.item);await reply(chat,'✅ Նյութը ավելացվեց GitHub-ում։ Vercel-ի հրապարակումից հետո այն կհայտնվի կայքում։\n\n'+parsed.item.title);
  return res.status(200).json({ok:true})
- }catch(e){console.error('Bot error',e);try{if(req.body?.message?.chat?.id)await reply(req.body.message.chat.id,'❌ Չհաջողվեց հրապարակել։ '+String(e.message||e).slice(0,200))}catch{}return res.status(200).json({ok:true})}
+ }catch(e){console.error('Bot error',e);try{if(req.body?.callback_query){await tg('answerCallbackQuery',{callback_query_id:req.body.callback_query.id,text:'Սխալ առաջացավ, փորձիր կրկին',show_alert:true}).catch(()=>{});await reply(req.body.callback_query.message.chat.id,'❌ Ստուգումը չհաջողվեց․ '+String(e.message||e).slice(0,180))}else if(req.body?.message?.chat?.id)await reply(req.body.message.chat.id,'❌ Չհաջողվեց հրապարակել։ '+String(e.message||e).slice(0,200))}catch{}return res.status(200).json({ok:true})}
 }
