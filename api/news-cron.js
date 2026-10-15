@@ -1,7 +1,8 @@
 // Multi-source Amulsar monitoring. RSS discovery is not independent verification.
+export const config={maxDuration:60};
 const REPO=process.env.GITHUB_REPO||'SyuneHovan/amulsar-platform';
 const FILE='src/data/news.json';
-const MAX_NEW=18,MAX_AI_ITEMS=60;
+const MAX_NEW=18,MAX_AI_ITEMS=40;
 const enc=s=>Buffer.from(s,'utf8').toString('base64');
 const dec=s=>Buffer.from(s,'base64').toString('utf8');
 const clean=s=>String(s||'').replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g,'$1').replace(/<[^>]*>/g,' ').replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#39;|&apos;/g,"'").replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/\s+/g,' ').trim();
