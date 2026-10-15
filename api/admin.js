@@ -15,7 +15,7 @@ async function authorize(req){
  if(!token)throw Error('Մուտք գործիր Google-ով։');
  const ticket=await client.verifyIdToken({idToken:token,audience:process.env.GOOGLE_CLIENT_ID});
  const p=ticket.getPayload(),emails=(process.env.ADMIN_EMAILS||'').split(',').map(x=>x.trim().toLowerCase()).filter(Boolean);
- if(!p.email_verified||!emails.includes((p.email||'').toLowerCase()))throw Error('Այս Google հաշիւը մուտքի իրաւունք չունի։');
+ if(!p.email_verified||!emails.includes((p.email||'').toLowerCase()))throw Error('Այս Google հաշիւը մուտքի իրավունք չունի։');
  return p.email;
 }
 const safeUrl=s=>{const u=new URL(s);if(u.protocol!=='https:')throw Error('Հղումը պէտք է լինի https://');return u.href};
@@ -31,8 +31,8 @@ export default async function handler(req,res){
    const current=await gh(files[type]);return res.status(200).json({email,items:JSON.parse(dec(current.content))});
   }
   const action=req.body?.action,id=req.body?.id,data=req.body?.item||{};
-  if(!['verify','reject','delete','create'].includes(action))return res.status(400).json({error:'Անյայտ գործողութիւն'});
-  if(action!=='create'&&(!id||typeof id!=='string'))return res.status(400).json({error:'Նիւթի ID-ն բացակայում է'});
+  if(!['verify','reject','delete','create'].includes(action))return res.status(400).json({error:'Անհայտ գործողութիւն'});
+  if(action!=='create'&&(!id||typeof id!=='string'))return res.status(400).json({error:'Նյութի ID-ն բացակայում է'});
   if(['verify','reject'].includes(action)&&type!=='news')return res.status(400).json({error:'Ստուգումը հասանելի է միայն լուրերի համար'});
   let created;
   if(action==='create'){
@@ -40,17 +40,17 @@ export default async function handler(req,res){
    if(title.length<5||title.length>180||description.length<15||description.length>3000)return res.status(400).json({error:'Լրացրու վերնագիրն ու նկարագրութիւնը'});
    const url=safeUrl(String(data.sourceUrl||''));
    const date=String(data.date||'');
-   if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||Number.isNaN(Date.parse(date)))return res.status(400).json({error:'Ամսաթիւը սխալ է'});
+   if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||Number.isNaN(Date.parse(date)))return res.status(400).json({error:'Ամսաթիվը սխալ է'});
    created={id:randomUUID(),title,date,sourceUrl:url,...(type==='news'?{summary:description,verificationStatus:'verified',sourceName:String(data.sourceName||'').slice(0,100)}:type==='events'?{description,location:String(data.location||'').slice(0,180),time:String(data.time||'').slice(0,20)}:{kind:String(data.kind||'Փաստաթուղթ'),year:date.slice(0,4),url})};
   }
   for(let attempt=0;attempt<3;attempt++){
    const current=await gh(files[type]),items=JSON.parse(dec(current.content));
    if(action==='create'){
-    if(items.some(x=>x.sourceUrl===created.sourceUrl||norm(x.title)===norm(created.title)))return res.status(409).json({error:'Այս նիւթը կամ հղումն արդէն կայ'});
+    if(items.some(x=>x.sourceUrl===created.sourceUrl||norm(x.title)===norm(created.title)))return res.status(409).json({error:'Այս նյութը կամ հղումն արդեն կա'});
     items.unshift(created);
    }else{
     const i=items.findIndex(x=>x.id===id);
-    if(i<0)return res.status(404).json({error:'Նիւթը չի գտնուել։ Թարմացրու ցանկը'});
+    if(i<0)return res.status(404).json({error:'Նյութը չի գտնվել։ Թարմացրու ցանկը'});
     if(action==='delete')items.splice(i,1);
     else{items[i].verificationStatus=action==='verify'?'verified':'false';items[i].reviewedAt=new Date().toISOString();items[i].reviewedBy=email}
    }
