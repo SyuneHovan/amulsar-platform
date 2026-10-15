@@ -222,3 +222,46 @@
 .music-icon:hover,.music-icon.active{background:#6e8a77;color:#fff}
 .music-icon:disabled{opacity:.45;cursor:not-allowed}
 .music-icon svg{display:block}
+
+/* Amulsar research map */
+.research-map{border:1px solid var(--border,#d8d1c5);border-radius:20px;overflow:hidden;background:var(--surface,#fcfaf5);color:var(--text,#332f2c)}
+.research-map-head{padding:22px;display:flex;justify-content:space-between;align-items:center;gap:20px}
+.research-map-head h2{font-size:clamp(19px,2vw,28px);margin:8px 0}
+.research-map-head p,.research-library>p{font-size:13px;opacity:.75;margin:0}
+.research-map-head .map-expand{position:static;white-space:nowrap}
+.research-map-layout{display:grid;grid-template-columns:minmax(220px,275px) minmax(0,1fr);min-height:540px;border-top:1px solid #9c958433}
+.research-sidebar{padding:17px;background:#ece8df66;border-right:1px solid #9c958433;overflow:auto;max-height:650px}
+.research-sidebar h3{font-size:12px;margin:19px 0 10px}
+.research-search-label{display:block;font-size:12px;font-weight:700;margin-bottom:6px}
+.research-search{width:100%;padding:10px 12px;border:1px solid #a59b8d77;border-radius:9px;background:var(--surface,#fff);color:inherit;font:inherit;font-size:13px}
+.research-layer{display:flex;align-items:center;gap:9px;padding:9px 0;font-size:13px;cursor:pointer}
+.research-layer input{accent-color:#607e69}
+.research-layer span{font-size:19px}
+.research-base{display:flex;gap:5px;flex-wrap:wrap}
+.research-base button{padding:7px 9px;border:1px solid #9c958477;border-radius:8px;background:transparent;color:inherit;font:inherit;font-size:11px;cursor:pointer}
+.research-base button.selected{background:#4c6b58;color:white}
+.research-places{display:grid;gap:5px}
+.research-places button{text-align:left;border:1px solid transparent;border-radius:8px;padding:9px;background:transparent;color:inherit;font:inherit;font-size:12px;cursor:pointer}
+.research-places button:hover,.research-places button.selected{background:#a99c8133;border-color:#a99c8155}
+.research-places button span{margin-right:8px;color:#a15d47}
+.research-disclaimer{font-size:11px;opacity:.7;line-height:1.5;margin-top:18px}
+.research-map-main{position:relative;min-width:0;min-height:540px;display:flex;flex-direction:column}
+.research-leaflet{flex:1;min-height:490px}
+.research-map-legend{font-size:11px;padding:11px 15px;line-height:1.5;background:var(--surface,#fff)}
+.research-selected{position:absolute;z-index:600;bottom:48px;left:15px;right:15px;max-width:430px;background:var(--surface,#fff);padding:17px;border-radius:12px;box-shadow:0 6px 28px #0003;font-size:12px}
+.research-selected button{float:right;border:0;background:none;color:inherit;cursor:pointer}
+.research-selected strong{display:block;font-size:15px;margin-bottom:8px}
+.research-selected p{margin:8px 0;line-height:1.6}
+.research-selected small{display:block;opacity:.7}
+.research-selected a,.research-doc-grid a{display:inline-block;margin-top:9px;color:#43836b;font-weight:700}
+.research-library{padding:24px;border-top:1px solid #9c958433}
+.research-library h3{font-size:19px;margin:0 0 9px}
+.research-doc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(225px,1fr));gap:12px;margin-top:20px}
+.research-doc-grid article{border:1px solid #9c958444;border-radius:13px;padding:17px}
+.research-doc-grid h4{font-size:15px;margin:10px 0}
+.research-doc-grid p{font-size:12px;line-height:1.65;opacity:.8}
+.research-map-fullscreen{position:fixed!important;inset:0;z-index:2500;border-radius:0;display:flex;flex-direction:column;overflow:auto}
+.research-map-fullscreen .research-map-layout{flex:1;min-height:0}
+.research-map-fullscreen .research-map-main{min-height:0}
+.research-map-fullscreen .research-library{display:none}
+@media(max-width:750px){.research-map-head{padding:14px;align-items:flex-start}.research-map-layout{display:flex;flex-direction:column}.research-sidebar{max-height:none;border-right:0;border-bottom:1px solid #9c958433}.research-places{grid-template-columns:repeat(2,minmax(0,1fr))}.research-map-main{min-height:420px}.research-leaflet{min-height:370px}.research-map-fullscreen .research-sidebar{max-height:210px}.research-map-fullscreen .research-map-main{flex:1}.research-map-fullscreen .research-map-head p{display:none}}
