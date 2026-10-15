@@ -9,6 +9,11 @@ const clean=s=>String(s||'').replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g,'$1').replace
 const field=(xml,name)=>clean(xml.match(new RegExp('<'+name+'(?:\\s[^>]*)?>([\\s\\S]*?)<\\/'+name+'>','i'))?.[1]||'');
 const normalized=s=>String(s||'').toLowerCase().normalize('NFKC').replace(/[^\p{L}\p{N}]+/gu,' ').trim();
 const topics=['"Ամուլսար" OR "Լիդիան" when:30d','"Amulsar" OR "Lydian Armenia" when:30d','"Амулсар" OR "Лидиан" when:30d','"Ջերմուկ" ("հանք" OR "ջուր" OR "բնապահպան") when:30d','"Կեչուտ" ("հանք" OR "Ամուլսար" OR "ջրամբար") when:30d','site:primeminister.am "Ամուլսար" when:30d','site:environment.gov.am "Ամուլսար" when:30d','site:gov.am "Ամուլսար" when:30d','site:lydianarmenia.com "Amulsar" when:30d','site:armenpress.am "Ամուլսար" when:30d','site:hetq.am "Ամուլսար" when:30d','site:ecolur.org "Amulsar" when:30d'];
+// Curated news outlets and organizations supplied by the editors.
+// These queries discover recent coverage; linked historical articles remain references, not new news.
+const curatedSites=['civilnet.am','armtimes.com','168.am','news.am','oragir.news','arka.am','fidh.org','armecofront.net','transparency.am','ge.boell.org','evnreport.com','jermuk.am'];
+const curatedQueries=curatedSites.map(site=>'site:'+site+' ("Amulsar" OR "Ամուլսար" OR "Амулсар") when:30d');
+topics.push(...curatedQueries);
 const feed=q=>'https://news.google.com/rss/search?q='+encodeURIComponent(q)+'&hl=hy&gl=AM&ceid=AM:hy';
 const gh=async(method,body)=>{const r=await fetch('https://api.github.com/repos/'+REPO+'/contents/'+FILE,{method,headers:{Accept:'application/vnd.github+json',Authorization:'Bearer '+process.env.GITHUB_TOKEN,'Content-Type':'application/json','X-GitHub-Api-Version':'2022-11-28'},...(body?{body:JSON.stringify(body)}:{})});if(!r.ok)throw new Error('GitHub '+r.status+': '+(await r.text()).slice(0,100));return r.json()};
 const kind=source=>/primeminister\.am|gov\.am|environment\.gov\.am|economy\.gov\.am/i.test(source)?'Պետական աղբյուր':/lydianarmenia\.com/i.test(source)?'Ընկերության հայտարարություն':/ebrd\.com/i.test(source)?'Միջազգային կազմակերպություն':'Լրատվական կամ մասնագիտական աղբյուր';
