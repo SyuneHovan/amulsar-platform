@@ -312,3 +312,8 @@
 .map-frame .simple-map-layers button:focus-visible{outline:2px solid #578b73;outline-offset:1px}
 @media(max-width:650px){.map-frame .simple-map-layers{top:9px;left:50%;max-width:calc(100% - 112px);padding:2px;gap:0}.map-frame .simple-map-layers button{font-size:10px;font-weight:450;padding:7px 7px}.map-frame .simple-map-layers button.active{font-weight:600}}
 @media(max-width:390px){.map-frame .simple-map-layers{top:53px;max-width:calc(100% - 18px)}.map-frame .simple-map-layers button{font-size:11px;padding:7px 10px}}
+
+.map-frame .simple-map-layers .map-3d-link{display:inline-flex;align-items:center;justify-content:center;border-left:1px solid #dce4dd;margin-left:3px;padding:7px 12px;border-radius:0 999px 999px 0;font-size:12px;font-weight:600;line-height:1.35;text-decoration:none;white-space:nowrap;color:#2e6a53;background:transparent;box-shadow:none}
+.map-frame .simple-map-layers .map-3d-link:hover{background:#edf3ee}
+@media(max-width:650px){.map-frame .simple-map-layers .map-3d-link{font-size:10px;padding:7px 7px}}
+@media(max-width:390px){.map-frame .simple-map-layers .map-3d-link{font-size:11px;padding:7px 10px}}
