@@ -1,0 +1,122 @@
+{
+  "note": "User-provided reference articles and search pages. Not independently verified. AI news discovery uses domain-restricted recent Google News RSS searches, not direct crawling of these URLs.",
+  "sources": [
+    {
+      "name": "Hetq",
+      "urls": [
+        "https://hetq.am/hy/article/58572",
+        "https://hetq.am/hy/article/68681",
+        "https://hetq.am/hy/article/149358",
+        "https://hetq.am/en/article/163621",
+        "https://hetq.am/en/article/149358",
+        "https://hetq.am/en/article/105048",
+        "https://hetq.am/en/article/153466",
+        "https://hetq.am/en/article/89784",
+        "https://hetq.am/en/article/92670",
+        "https://hetq.am/en/article/73075",
+        "https://hetq.am/en/article/149588",
+        "https://hetq.am/hy/article/164044",
+        "https://hetq.am/en/article/90775",
+        "https://hetq.am/en/article/91110",
+        "https://hetq.am/hy/article/172881",
+        "https://hetq.am/hy/article/24635",
+        "https://hetq.am/hy/article/154029",
+        "https://hetq.am/hy/article/153666",
+        "https://hetq.am/hy/article/85693",
+        "https://hetq.am/hy/article/120140",
+        "https://hetq.am/hy/article/106558",
+        "https://hetq.am/hy/article/118920",
+        "https://hetq.am/hy/article/106471"
+      ]
+    },
+    {
+      "name": "CivilNet",
+      "urls": [
+        "https://www.civilnet.am/en/news/810924/armenian-government-acquires-stake-in-amulsar-gold-mine/"
+      ]
+    },
+    {
+      "name": "Armtimes",
+      "urls": [
+        "https://armtimes.com/hy/search?q=Ամուլսար"
+      ]
+    },
+    {
+      "name": "168.am",
+      "urls": [
+        "https://168.am/?s=ամուլսար"
+      ]
+    },
+    {
+      "name": "NEWS.am",
+      "urls": [
+        "https://news.am/arm/news/802765.html",
+        "https://news.am/eng/news/802765.html",
+        "https://news.am/eng/news/898367.html"
+      ]
+    },
+    {
+      "name": "Oragir",
+      "urls": [
+        "https://oragir.news/ru/do/search-enter?q=Ամուլսար&page=1"
+      ]
+    },
+    {
+      "name": "Armenpress",
+      "urls": [
+        "https://armenpress.am/hy/article/1216908",
+        "https://armenpress.am/hy/article/1128319",
+        "https://armenpress.am/en/article/1216908",
+        "https://armenpress.am/en/article/1128319"
+      ]
+    },
+    {
+      "name": "ARKA",
+      "urls": [
+        "https://arka.am/am/search/index.php?q=ամուլսար&s=Որոնել"
+      ]
+    },
+    {
+      "name": "FIDH",
+      "urls": [
+        "https://www.fidh.org/en/region/europe-central-asia/armenia/armenia-amulsar-gold-mine-democracy-environment-failure-development-bank"
+      ]
+    },
+    {
+      "name": "Armenian Environmental Front",
+      "urls": [
+        "https://armecofront.net/lrahos/amulsar/"
+      ]
+    },
+    {
+      "name": "Transparency International Armenia",
+      "urls": [
+        "https://transparency.am/hy/media/news?q=Ամուլսար"
+      ]
+    },
+    {
+      "name": "EcoLur",
+      "urls": [
+        "https://www.ecolur.org/hy/news/?region=&keyword=Ամուլսար&Page=1"
+      ]
+    },
+    {
+      "name": "Heinrich Böll Foundation",
+      "urls": [
+        "https://ge.boell.org/hy/node/4567"
+      ]
+    },
+    {
+      "name": "EVN Report",
+      "urls": [
+        "https://evnreport.com/?s=amulsar"
+      ]
+    },
+    {
+      "name": "Jermuk Municipality",
+      "urls": [
+        "https://jermuk.am/Pages/search/default.aspx?s=ամուլսար&sc=90127"
+      ]
+    }
+  ]
+}
