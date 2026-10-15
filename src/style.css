@@ -116,3 +116,10 @@
 .source-table{width:100%;border-collapse:collapse;margin:22px 0 28px;font-size:14px}.source-table th,.source-table td{text-align:left;padding:14px;border-bottom:1px solid #bfc9bf}.source-table th{font-weight:800}.source-table td:nth-child(n+2){font-variant-numeric:tabular-nums}[data-theme="dark"] .source-table th,[data-theme="dark"] .source-table td{border-color:#475960}
 
 .unverified-badge{display:inline-block;margin:5px 0 8px;padding:5px 9px;border:1px solid #b97836;border-radius:5px;color:#8d531d;background:#fff0d8;font-size:10px;font-weight:800;letter-spacing:.035em}[data-theme="dark"] .unverified-badge{color:#f3c98e;background:#3b3026;border-color:#946f43}
+
+/* Movement social contacts */
+.footer-social{display:flex;flex-direction:column;align-items:flex-start;gap:10px;min-width:155px}
+.footer-social b{font-size:14px;letter-spacing:.02em}
+.footer-social a{color:inherit;text-decoration:none;opacity:.85;font-size:14px;transition:opacity .2s}
+.footer-social a:hover,.footer-social a:focus-visible{opacity:1;text-decoration:underline;text-underline-offset:4px}
+@media(max-width:680px){.footer-social{margin-top:18px;gap:12px}.footer-social a{padding:4px 0}}
