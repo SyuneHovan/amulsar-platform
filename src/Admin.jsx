@@ -16,13 +16,24 @@ export default function Admin(){
   const r=await fetch('/api/admin?type='+type,{method,headers:{Authorization:'Bearer '+token,...(body?{'Content-Type':'application/json'}:{})},...(body?{body:JSON.stringify(body)}:{})});
   const json=await r.json().catch(()=>({}));if(!r.ok)throw Error(json.error||'Սխալ առաջացավ');return json;
  };
- const load=async()=>{if(!token)return;setBusy('load');setError('');try{const data=await request();setItems(data.items||[]);setEmail(data.email||'')}catch(e){if(/403|Մուտք|expired|Token|token|signature/i.test(e.message)){setToken('');try{sessionStorage.removeItem('amulsar_admin_token')}catch{}}setError(e.message)}finally{setBusy('')}};
+ const load=async({silent=false}={})=>{if(!token)return;if(!silent)setBusy('load');setError('');try{const data=await request();setItems(data.items||[]);setEmail(data.email||'')}catch(e){if(/403|Մուտք|expired|Token|token|signature/i.test(e.message)){setToken('');try{sessionStorage.removeItem('amulsar_admin_token')}catch{}}setError(e.message)}finally{if(!silent)setBusy('')}};
  useEffect(()=>{if(token)load()},[token,type]);
  const act=async(action,id,item)=>{
   if(action==='delete'&&!window.confirm('Վստա՞հ ես, որ ուզում ես ընդմիշտ ջնջել նյութը։'))return;
   setBusy(id||'create');setError('');setNotice('');
-  try{await request('POST',{action,id,item});setNotice(action==='create'?'Նյութը պահպանվեց':action==='delete'?'Նյութը ջնջվեց':'Կարգավիճակը պահպանվեց');if(action==='create'){setAdding(false);setForm(initial)}if(action==='createFromLink')setLink('');await load()}
-  catch(e){setError(e.message)}finally{setBusy('')}
+  try{
+   await request('POST',{action,id,item});
+   if(action==='verify'||action==='reject'){
+    setItems(prev=>prev.map(x=>x.id===id?{...x,verificationStatus:action==='verify'?'verified':'false'}:x));
+   }else if(action==='delete'){
+    setItems(prev=>prev.filter(x=>x.id!==id));
+   }else{
+    if(action==='create'){setAdding(false);setForm(initial)}
+    if(action==='createFromLink')setLink('');
+    await load({silent:true});
+   }
+   setNotice(action==='create'||action==='createFromLink'?'Նյութը պահպանվեց':action==='delete'?'Նյութը ջնջվեց':'Կարգավիճակը պահպանվեց');
+  }catch(e){setError(e.message)}finally{setBusy('')}
  };
  const shown=items.filter(x=>type!=='news'||filter==='all'||(filter==='pending'?x.verificationStatus!=='verified'&&x.verificationStatus!=='false':filter==='verified'?x.verificationStatus==='verified':x.verificationStatus==='false'));
  return <section className="admin-wrap"><div className="admin-top"><div><span className="admin-eyebrow">AMULSAR · CONTENT STUDIO</span><h1>Խմբագրական վահանակ</h1><p>Ստուգիր աղբյուրները, հրապարակիր կամ հեռացրու նյութերը։</p></div>{token&&<button className="admin-ghost" onClick={()=>{window.google?.accounts.id.disableAutoSelect();setToken('');try{sessionStorage.removeItem('amulsar_admin_token')}catch{}setEmail('');setItems([])}}>Դուրս գալ ↗</button>}</div>
