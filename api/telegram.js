@@ -8,7 +8,7 @@ const tg=async(method,body)=>{const r=await fetch('https://api.telegram.org/bot'
 const reply=(chat_id,text,html=false)=>tg('sendMessage',{chat_id,text,disable_web_page_preview:true,...(html?{parse_mode:'HTML'}:{})});
 const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 const mono=s=>'<code>'+esc(s)+'</code>';
-const menu='Բարև 🌱\n\n/news — նորություն\n/event — ակցիա կամ միջոցառում\n/document — փաստաթուղթ\n/delete — նյութերի ցանկ և ջնջում (ադմին)\n/id — քո Telegram ID-ն\n\nԲոտը հասանելի է միայն թույլատրված խմբագիրներին։';
+const menu='Բարև 🌱\n\n/news — նորություն\n/event — ակցիա կամ միջոցառում\n/document — փաստաթուղթ\n/review — լուրերի արագ ստուգում\n/delete — նյութերի ցանկ և ջնջում (ադմին)\n/id — քո Telegram ID-ն\n\nԲոտը հասանելի է միայն թույլատրված խմբագիրներին։';
 const templates={
 news:'Նորություն\nՎերնագիր: \nԱմսաթիվ: 2026-10-15\nՆկարագրություն: \nԱղբյուր: https://',
 event:'Ակցիա\nՎերնագիր: \nԱմսաթիվ: 2026-10-15\nԺամ: 15:00\nՎայր: \nՆկարագրություն: \nԱղբյուր: https://',
@@ -54,11 +54,69 @@ async function deletionList(type){
  if(!items.length)return names[type]+': նյութեր չկան։';
  return names[type]+' (վերջին 15)՝\n\n'+items.slice(0,15).map((x,i)=>(i+1)+'. '+esc(x.title)+'\n'+mono('/delete '+type+' '+x.id)).join('\n\n')+'\n\nՀպիր հրամանին՝ պատճենելու համար։';
 }
+
+const reviewKeyboard=(item)=>({inline_keyboard:[
+ [{text:'✅ Ստուգված',callback_data:'review:verified:'+item.id},{text:'❌ Կեղծ',callback_data:'review:false:'+item.id}],
+ [{text:'🗑 Հեռացնել',callback_data:'review:delete:'+item.id}]
+]});
+async function reviewList(chat,page=0){
+ const {items}=await loadItems('news');const list=items.filter(x=>x.verificationStatus!=='false');
+ const start=Math.max(0,page)*8,chunk=list.slice(start,start+8);
+ if(!chunk.length){await reply(chat,'Այս էջում լուրեր չկան։');return}
+ for(const x of chunk){
+  const status=x.verificationStatus==='verified'?'✅ Ստուգված':'⏳ Չստուգված';
+  await tg('sendMessage',{chat_id:chat,text:status+' · '+(x.date||'')+'\n'+x.title.slice(0,220),reply_markup:reviewKeyboard(x)});
+ }
+ const buttons=[];if(start>0)buttons.push({text:'⬅️ Նախորդ',callback_data:'page:'+(page-1)});
+ if(start+8<list.length)buttons.push({text:'Հաջորդ ➡️',callback_data:'page:'+(page+1)});
+ if(buttons.length)await tg('sendMessage',{chat_id:chat,text:'Էջ '+(page+1),reply_markup:{inline_keyboard:[buttons]}});
+}
+async function moderate(itemId,action){
+ for(let attempt=0;attempt<3;attempt++){
+  const {current,items}=await loadItems('news');const index=items.findIndex(x=>x.id===itemId);
+  if(index<0)return null;
+  const item=items[index];
+  if(action==='delete')items.splice(index,1);
+  else{item.verificationStatus=action;item.reviewedAt=new Date().toISOString()}
+  try{await gh(datasets.news,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:'Review news: '+action,content:encode(JSON.stringify(items,null,2)+'\n'),sha:current.sha,branch:'main'})});return item}
+  catch(e){if((!String(e).includes('409')&&!String(e).includes('422'))||attempt===2)throw e}
+ }
+}
 export default async function handler(req,res){
  if(req.method!=='POST')return res.status(405).json({error:'Method not allowed'});
  if(!TOKEN||!SECRET||!GH_TOKEN)return res.status(503).json({error:'Bot not configured'});
  if(req.headers['x-telegram-bot-api-secret-token']!==SECRET)return res.status(403).json({error:'Forbidden'});
- try{const m=req.body?.message;if(!m?.text||!m?.from?.id||!m?.chat?.id)return res.status(200).json({ok:true});
+ try{
+ const cb=req.body?.callback_query;
+ if(cb){
+  const user=String(cb.from?.id||''),chat=cb.message?.chat?.id,valid=allowed().has(user)||admins().has(user);
+  const answer=async message=>tg('answerCallbackQuery',{callback_query_id:cb.id,text:message,show_alert:false});
+  if(!valid){await answer('Մուտքը թույլատրված չէ');return res.status(200).json({ok:true})}
+  if(cb.data?.startsWith('page:')){await answer('Բացվում է');await reviewList(chat,Math.min(30,Math.max(0,Number(cb.data.slice(5))||0)));return res.status(200).json({ok:true})}
+  const match=cb.data?.match(/^review:(verified|false|delete):([0-9a-f-]{36})$/i);
+  if(match){
+   const action=match[1],itemId=match[2];
+   if(action==='delete'&&!admins().has(user)){await answer('Ջնջել կարող է միայն ադմինը');return res.status(200).json({ok:true})}
+   if(action==='delete'&&!cb.data.startsWith('review:delete-confirm:')){
+    await answer('Հաստատիր ջնջումը');
+    await tg('sendMessage',{chat_id:chat,text:'⚠️ Վստա՞հ ես, որ ուզում ես ջնջել այս լուրը։',reply_markup:{inline_keyboard:[[{text:'🗑 Այո, ջնջել',callback_data:'confirm:'+itemId},{text:'Չեղարկել',callback_data:'cancel'}]]}});
+    return res.status(200).json({ok:true})
+   }
+   const item=await moderate(itemId,action);await answer(item?'Պահպանվեց':'Լուրը չգտնվեց');
+   if(item)await tg('editMessageReplyMarkup',{chat_id:chat,message_id:cb.message.message_id,reply_markup:{inline_keyboard:[]}}).catch(()=>{});
+   if(item)await reply(chat,(action==='verified'?'✅ Ստուգված է':action==='false'?'❌ Նշվեց կեղծ և թաքցվեց կայքից':'🗑 Հեռացվեց')+'՝ '+item.title+'\nԿայքը կթարմացվի Vercel-ի հրապարակումից հետո։');
+   return res.status(200).json({ok:true})
+  }
+  if(cb.data?.startsWith('confirm:')){
+   if(!admins().has(user)){await answer('Միայն ադմինը');return res.status(200).json({ok:true})}
+   const itemId=cb.data.slice(8);if(!/^[0-9a-f-]{36}$/i.test(itemId)){await answer('Սխալ ID');return res.status(200).json({ok:true})}
+   const item=await moderate(itemId,'delete');await answer(item?'Ջնջվեց':'Չգտնվեց');
+   await tg('editMessageReplyMarkup',{chat_id:chat,message_id:cb.message.message_id,reply_markup:{inline_keyboard:[]}}).catch(()=>{});
+   if(item)await reply(chat,'🗑 Հեռացվեց՝ '+item.title);return res.status(200).json({ok:true})
+  }
+  await answer('Չեղարկվեց');return res.status(200).json({ok:true})
+ }
+ const m=req.body?.message;if(!m?.text||!m?.from?.id||!m?.chat?.id)return res.status(200).json({ok:true});
  const id=String(m.from.id),chat=m.chat.id,text=m.text.trim();
  if(text==='/id'||text.startsWith('/id@')){await reply(chat,'Քո Telegram ID-ն՝ '+id);return res.status(200).json({ok:true})}
  if(!allowed().has(id)&&!admins().has(id)){await reply(chat,'Այս բոտի խմբագիրների ցանկում չկաս։ Ուղարկիր քո ID-ն ադմինին՝ '+id);return res.status(200).json({ok:true})}
@@ -82,7 +140,7 @@ export default async function handler(req,res){
   }
   return res.status(200).json({ok:true})
  }
- if(text==='/start'||text==='/help'){await reply(chat,menu);return res.status(200).json({ok:true})}
+ if(text==='/review'||text.startsWith('/review@')){await reviewList(chat);return res.status(200).json({ok:true})}\n if(text==='/start'||text==='/help'){await reply(chat,menu);return res.status(200).json({ok:true})}
  const cmd=text.split('@')[0];
  if(cmd==='/news'||cmd==='/event'||cmd==='/document'){await reply(chat,'Պատճենիր ձևանմուշը, լրացրու և ուղարկիր որպես մեկ հաղորդագրություն։\n\n<pre>'+esc(templates[cmd.slice(1)])+'</pre>\n\n⚠️ Ուղարկելուց հետո նյութը անմիջապես կհրապարակվի։',true);return res.status(200).json({ok:true})}
  const parsed=parse(text);if(!parsed){await reply(chat,menu);return res.status(200).json({ok:true})}
