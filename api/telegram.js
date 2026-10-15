@@ -63,10 +63,10 @@ async function reviewList(chat,page=0){
  const {items}=await loadItems('news');const list=items;
  const start=Math.max(0,page)*8,chunk=list.slice(start,start+8);
  if(!chunk.length){await reply(chat,'Այս էջում լուրեր չկան։');return}
- for(const x of chunk){
+ await Promise.all(chunk.map(async x=>{
   const status=x.verificationStatus==='verified'?'✅ Ստուգված':x.verificationStatus==='false'?'❌ Կեղծ':'⏳ Չստուգված';
   await tg('sendMessage',{chat_id:chat,text:status+' · '+(x.date||'')+'\n'+x.title.slice(0,220)+'\n\n'+(x.summary||'').slice(0,650)+'\n\n🔗 Աղբյուր՝ '+(x.sourceUrl||'հղում չկա'),disable_web_page_preview:true,reply_markup:reviewKeyboard(x)});
- }
+ }));
  const buttons=[];if(start>0)buttons.push({text:'⬅️ Նախորդ',callback_data:'page:'+(page-1)});
  if(start+8<list.length)buttons.push({text:'Հաջորդ ➡️',callback_data:'page:'+(page+1)});
  if(buttons.length)await tg('sendMessage',{chat_id:chat,text:'Էջ '+(page+1),reply_markup:{inline_keyboard:[buttons]}});
@@ -102,7 +102,8 @@ export default async function handler(req,res){
     await tg('sendMessage',{chat_id:chat,text:'⚠️ Վստա՞հ ես, որ ուզում ես ջնջել այս լուրը։',reply_markup:{inline_keyboard:[[{text:'🗑 Այո, ջնջել',callback_data:'confirm:'+itemId},{text:'Չեղարկել',callback_data:'cancel'}]]}});
     return res.status(200).json({ok:true})
    }
-   const item=await moderate(itemId,action);await answer(item?'Պահպանվեց':'Լուրը չգտնվեց');
+   await answer('Մշակվում է…');
+   const item=await moderate(itemId,action);
    if(item)await tg('editMessageReplyMarkup',{chat_id:chat,message_id:cb.message.message_id,reply_markup:{inline_keyboard:[]}}).catch(()=>{});
    if(item)await reply(chat,(action==='verified'?'✅ Ստուգված է':action==='false'?'❌ Նշվեց կեղծ և թաքցվեց կայքից':'🗑 Հեռացվեց')+'՝ '+item.title+'\nԿայքը կթարմացվի Vercel-ի հրապարակումից հետո։');
    return res.status(200).json({ok:true})
@@ -110,7 +111,8 @@ export default async function handler(req,res){
   if(cb.data?.startsWith('confirm:')){
    if(!admins().has(user)){await answer('Միայն ադմինը');return res.status(200).json({ok:true})}
    const itemId=cb.data.slice(8);if(!/^[0-9a-f-]{36}$/i.test(itemId)){await answer('Սխալ ID');return res.status(200).json({ok:true})}
-   const item=await moderate(itemId,'delete');await answer(item?'Ջնջվեց':'Չգտնվեց');
+   await answer('Ջնջվում է…');
+   const item=await moderate(itemId,'delete');
    await tg('editMessageReplyMarkup',{chat_id:chat,message_id:cb.message.message_id,reply_markup:{inline_keyboard:[]}}).catch(()=>{});
    if(item)await reply(chat,'🗑 Հեռացվեց՝ '+item.title);return res.status(200).json({ok:true})
   }
