@@ -140,7 +140,8 @@ export default async function handler(req,res){
   }
   return res.status(200).json({ok:true})
  }
- if(text==='/review'||text.startsWith('/review@')){await reviewList(chat);return res.status(200).json({ok:true})}\n if(text==='/start'||text==='/help'){await reply(chat,menu);return res.status(200).json({ok:true})}
+ if(text==='/review'||text.startsWith('/review@')){await reviewList(chat);return res.status(200).json({ok:true})}
+ if(text==='/start'||text==='/help'){await reply(chat,menu);return res.status(200).json({ok:true})}
  const cmd=text.split('@')[0];
  if(cmd==='/news'||cmd==='/event'||cmd==='/document'){await reply(chat,'Պատճենիր ձևանմուշը, լրացրու և ուղարկիր որպես մեկ հաղորդագրություն։\n\n<pre>'+esc(templates[cmd.slice(1)])+'</pre>\n\n⚠️ Ուղարկելուց հետո նյութը անմիջապես կհրապարակվի։',true);return res.status(200).json({ok:true})}
  const parsed=parse(text);if(!parsed){await reply(chat,menu);return res.status(200).json({ok:true})}
