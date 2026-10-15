@@ -265,3 +265,9 @@
 .research-map-fullscreen .research-map-main{min-height:0}
 .research-map-fullscreen .research-library{display:none}
 @media(max-width:750px){.research-map-head{padding:14px;align-items:flex-start}.research-map-layout{display:flex;flex-direction:column}.research-sidebar{max-height:none;border-right:0;border-bottom:1px solid #9c958433}.research-places{grid-template-columns:repeat(2,minmax(0,1fr))}.research-map-main{min-height:420px}.research-leaflet{min-height:370px}.research-map-fullscreen .research-sidebar{max-height:210px}.research-map-fullscreen .research-map-main{flex:1}.research-map-fullscreen .research-map-head p{display:none}}
+
+/* Keep research map fullscreen action inside its own header, above map content */
+.research-map .research-map-head{position:relative;isolation:isolate}
+.research-map .research-map-head .map-expand{position:relative!important;top:auto!important;right:auto!important;left:auto!important;bottom:auto!important;transform:none!important;z-index:1!important;flex-shrink:0;margin:0!important}
+.research-map .research-map-head>div{min-width:0;flex:1}
+@media(max-width:480px){.research-map .research-map-head{flex-wrap:wrap}.research-map .research-map-head .map-expand{margin-left:auto!important}}
