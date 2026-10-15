@@ -127,3 +127,6 @@
 /* News moderation labels */
 .news-tags{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:12px 0 14px}
 .news-tags .unverified-badge,.news-tags .news-source-type{display:inline-flex;align-items:center;margin:0;max-width:100%;line-height:1.35}
+
+.reconstructed-source{margin:24px 0;padding:20px;border:1px solid currentColor;border-radius:12px}.reconstructed-source p{margin:10px 0 18px}
+@media print{header,.header,.footer,.reconstructed-source button,.text-link,.map-section{display:none!important}body{background:white!important;color:black!important}.inner-page{padding:15mm!important;max-width:none!important}.reconstructed-source{border:0;padding:0}.source-table{width:100%;font-size:11pt}a{color:black!important}}
