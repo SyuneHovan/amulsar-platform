@@ -284,3 +284,15 @@
 .mine-facts-links{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
 .mine-facts-links a{font-size:12px;font-weight:700;color:#43836b}
 @media(max-width:650px){.mine-facts{padding:16px}.mine-facts-grid{grid-template-columns:1fr}}
+
+/* Location imagery inspector */
+.imagery-versions{margin-bottom:7px}
+.imagery-detail{max-width:480px;max-height:min(73vh,540px);overflow:auto}
+.imagery-detail .imagery-close{float:right;font-size:16px;padding:2px 6px}
+.imagery-tabs{display:flex;gap:4px;margin:12px 0;border-bottom:1px solid #aaa6}
+.imagery-tabs button{flex:1;border:0;border-bottom:3px solid transparent;padding:10px 6px;background:transparent;color:inherit;cursor:pointer;font-size:12px;font-weight:700}
+.imagery-tabs button.selected{border-color:#43836b;color:#43836b}
+.imagery-panel{font-size:12px;line-height:1.65}
+.imagery-panel .research-base{margin:12px 0}
+.imagery-location-note{padding-top:10px;border-top:1px solid #aaa5;font-size:12px}
+@media(max-width:650px){.imagery-detail{left:8px;right:8px;bottom:38px;max-height:54vh;padding:13px}.imagery-tabs button{font-size:11px}}
