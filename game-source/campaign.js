@@ -98,7 +98,8 @@ paper.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const a=+b.dataset.
 paper.querySelector('#next').onclick=()=>{chapterDone[level]=true;save.unlocked=Math.max(save.unlocked,level+1);save.best=Math.max(save.best,score);persist();if(level===3){clearRun();win();return;}
 checkpointScores[level+1]=score;try{localStorage.setItem('amulsar_doodle_checkpoints_v4',JSON.stringify(checkpointScores))}catch(e){}level++;stageTimeTicks=0;collected=objects.filter(o=>o.kind==='collect'&&o.stage===level&&o.got).length;hearts=Math.min(3,hearts+1);player.vy=JUMP;player.vx=0;boost=0;shield=90;damageFlash=0;stationPending=false;hide();updateHud();toast(`${level+1}/4 · ${chapters[level].title}`);};}
 function win(){show(`<div class="eyebrow">ՎԵՐԵԼՔՆ ԱՎԱՐՏՎԱԾ Է</div><h1>Դու փրկեցիր Ամուլսարը</h1><p>Դու պայքարեցիր Ամուլսարի համար․ անցար ավերակների ու վտանգների միջով, հավաքեցիր 96 հետք և վերադարձրիր լեռան կանաչ ապագան։</p><h2>${score} միավոր</h2><div class="time-summary">${phaseTimes.map((t,i)=>`<p>Գլուխ ${i+1}՝ <strong>${t===null?"—":formatTime(t)}</strong></p>`).join('')}<p>Ընդհանուր՝ <strong>${formatTime(phaseTimes.reduce((sum,t)=>sum+(t||0),0))}</strong></p></div><p class="mini">Սա խաղի խորհրդանշական ավարտն է։ Իրական բնապահպանական արդյունքները պահանջում են տվյալներ, աշխատանք և հանրային մասնակցություն։</p><button class="btn" id="share">ԿԻՍՎԵԼ ԱՐԴՅՈՒՆՔՈՎ</button><button class="btn alt" id="again">ԿՐԿԻՆ ՍԿՍԵԼ</button>`);paper.querySelector('#again').onclick=menu;paper.querySelector('#share').onclick=async()=>{try{const text=`Ես ավարտեցի «Վերադարձրու Ամուլսարը» վերելքը՝ ${score} միավորով։`;if(navigator.share)await navigator.share({title:'Վերադարձրու Ամուլսարը',text,url:location.href});else if(navigator.clipboard){await navigator.clipboard.writeText(text);toast('Պատճենված է');}}catch(e){}};}
-function update(step){if(mode!=='play')return;const prevFrame=frame;frame+=step;if(TEST)stageTimeTicks+=step;damageFlash=Math.max(0,damageFlash-step);landingSquash=Math.max(0,landingSquash-step*.1);let dir=(keys.right?1:0)-(keys.left?1:0);if(level===2)dir+=Math.sin(frame*.011)*.25;
+function campaignWind(t=frame){return level===2?Math.sin(t*.011)*.25:0;}
+function update(step){if(mode!=='play')return;const prevFrame=frame;frame+=step;if(TEST)stageTimeTicks+=step;damageFlash=Math.max(0,damageFlash-step);landingSquash=Math.max(0,landingSquash-step*.1);let dir=(keys.right?1:0)-(keys.left?1:0);dir+=campaignWind();
 // Immediate steering reversal and a short acceleration/braking ramp.
 const desired=dir*HORIZONTAL_SPEED;if(dir&&Math.sign(dir)!==Math.sign(player.vx))player.vx=0;
 player.vx+=clamp(desired-player.vx,-HORIZONTAL_ACCEL*step,HORIZONTAL_ACCEL*step);
@@ -135,6 +136,31 @@ function drawCampaignPlatform(name,x,y,w,h){
  const sx=w/art.width,sy=h/art.height;
  ctx.drawImage(art.canvas,x-art.pad*sx,y-art.pad*sy,art.canvas.width*sx,art.canvas.height*sy);
 }
+// Screen-space gusts reuse the physics wind, with no particles or extra timers.
+function drawCampaignWind(){
+ if(mode!=='play'||level!==2)return;
+ const wind=campaignWind(),strength=Math.abs(wind)/.25;
+ // Each gust fades out around a direction change, leaving quiet intervals.
+ const opacity=clamp((strength-.28)/.72,0,1);
+ if(opacity<=0)return;
+ const direction=Math.sign(wind);
+ ctx.save();ctx.beginPath();ctx.rect(0,80,SW,SH-180);ctx.clip();
+ ctx.lineCap='round';ctx.lineWidth=1.6;
+ for(let i=0;i<12;i++){
+  const travel=((frame*(1.3+strength)+i*83)%(SW+130))-65;
+  const x=direction>0?travel:SW-travel,y=130+(i*53)%(SH-260);
+  const length=24+(i%4)*9;
+  ctx.globalAlpha=opacity*(.22+(i%3)*.08);ctx.strokeStyle='#f8f7e8';
+  ctx.beginPath();ctx.moveTo(x-direction*length,y);
+  ctx.quadraticCurveTo(x-direction*length*.45,y-5,x,y);ctx.stroke();
+  ctx.globalAlpha=opacity*.25;ctx.strokeStyle='#62796e';
+  ctx.beginPath();ctx.moveTo(x-direction*length*.8,y+3);ctx.lineTo(x-direction*5,y+3);ctx.stroke();
+ }
+ ctx.globalAlpha=opacity*.9;ctx.fillStyle='#f8f7e8';
+ ctx.fillRect(SW/2-49,86,98,25);ctx.fillStyle='#425f52';
+ ctx.font='12px system-ui';ctx.textAlign='center';
+ ctx.fillText(direction>0?'Քամի →':'← Քամի',SW/2,103);ctx.restore();
+}
 function draw(){prepareCampaignScenery();const p=started?phaseProgress():0,n=started?level:3,mix=p*p*(3-2*p);ctx.drawImage(campaignScenery[n],0,0,SW,SH);ctx.globalAlpha=mix;ctx.drawImage(campaignScenery[n+1],0,0,SW,SH);ctx.globalAlpha=1;
 ctx.save();ctx.beginPath();ctx.rect(0,64,SW,SH-64);ctx.clip();ctx.translate(0,-camera);
 for(const ledge of world){const y=ledge.y;if(y-camera< -100||y-camera>SH+80||ledge.broken>22)continue;const x=platformX(ledge),f=ledge.w/122;ctx.save();if(ledge.broken){ctx.globalAlpha=1-ledge.broken/23;ctx.translate(0,ledge.broken*.7);}if(ledge.type==='vanishing'){const cycle=(frame+ledge.phase*40)%190;ctx.globalAlpha=cycle>132?.10:cycle>110?.5:1;}
@@ -142,7 +168,7 @@ const kind=ledge.type==='station'?'finish':ledge.type==='corroded'?'crumble':led
 drawCampaignPlatform(`platform-${ledge.stage}-${kind}`,x,y-59*f*.65,ledge.w,100*f*.65);ctx.restore();}
 for(const o of objects){if(o.got||o.stage>level||o.y-camera< -230||o.y-camera>SH+150)continue;const pos=objectPosition(o);ctx.save();if(o.kind==='hazard'){ctx.globalAlpha=pos.active?1:.24;const name='danger-'+o.variant;if(['drip','cyanideDrip'].includes(o.variant))sprite('danger-pipe',pos.x-13,o.y-150,26,24);if(!pos.active&&['drip','cyanideDrip','rock'].includes(o.variant)){ctx.restore();continue;}if(o.variant==='seep')sprite(name,pos.x-24,pos.y-8,48,17);else if(o.variant==='dust'||o.variant==='vent')sprite(name,pos.x-23,pos.y-17,46,34);else sprite(name,pos.x-15,pos.y-20,30,37);}else sprite(o.kind==='collect'?chapters[o.stage].icon:o.kind,pos.x-14,pos.y-17,28,33);ctx.restore();}
 if(damageFlash<=0||Math.floor(frame/7)%2===0){ctx.save();ctx.translate(player.x+14,player.y+19);ctx.rotate(clamp(player.vx*.018,-.13,.13));if(player.vx<-.25)ctx.scale(-1,1);const squash=landingSquash*.11;ctx.scale(1+squash,1-squash);const pose=player.vy< -3?1:player.vy>3?2:0;ctx.shadowColor='#fff9ec';ctx.shadowBlur=6;sprite(`hero-${skin}-${pose}`,-36,-61.5,72,90);ctx.restore();if(shield>0)sprite('shield',player.x+24,player.y-13,16,18);}
-for(const e of effects)if(e.kind==='collect'){ctx.globalAlpha=clamp(e.life/28,0,1);sprite(chapters[level].icon,e.x-13,e.y-23,26,32);}ctx.globalAlpha=1;ctx.restore();if(mode==='play'&&frame<100){ctx.fillStyle='#52675c';ctx.font='11px system-ui';ctx.textAlign='center';ctx.fillText('Ընտրիր հարթակ · սեղմիր ձախ կամ աջ',195,SH-105);ctx.textAlign='left';}}
+for(const e of effects)if(e.kind==='collect'){ctx.globalAlpha=clamp(e.life/28,0,1);sprite(chapters[level].icon,e.x-13,e.y-23,26,32);}ctx.globalAlpha=1;ctx.restore();drawCampaignWind();if(mode==='play'&&frame<100){ctx.fillStyle='#52675c';ctx.font='11px system-ui';ctx.textAlign='center';ctx.fillText('Ընտրիր հարթակ · սեղմիր ձախ կամ աջ',195,SH-105);ctx.textAlign='left';}}
 const legacyMenu=menu;menu=function(){legacyMenu();paper.querySelector('#start').textContent='ՍԿՍԵԼ ԱՄԲՈՂՋ ՎԵՐԵԼՔԸ';paper.querySelector('#start').onclick=()=>startChapter(0);const p=paper.querySelector('p');if(p)p.textContent='Քանդված հանքից մինչև կանաչ գագաթ․ մեկ երկար վերելք, չորս հետազոտական կայան և լեռան վերականգնման պատմություն։';};
 const legacyMap=map;map=function(){legacyMap();paper.querySelector('p').textContent=`Չորս գլուխ՝ մեկ լեռան վրա։ Յուրաքանչյուրում հավաքիր ${NEEDED} հետք։ Ավարտած գլխից հետո վերելքը շարունակվում է նույն տեղից։`;};
 try{runAvailable=!!(localStorage.getItem(CAMPAIGN_RUN)||localStorage.getItem(LEGACY_RUN5)||localStorage.getItem(LEGACY_RUN4)||localStorage.getItem(RUN));}catch(e){}
