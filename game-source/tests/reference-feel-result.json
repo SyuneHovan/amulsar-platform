@@ -1,0 +1,27 @@
+{
+  "results": [
+    {
+      "name": "Every ordinary route step is reachable with steering margin",
+      "passed": true
+    },
+    {
+      "name": "Platform field has varied gaps and short, medium, wrap-range jumps",
+      "passed": true
+    },
+    {
+      "name": "Full bounce returns after 1.25 seconds with reference falling speed",
+      "passed": true
+    },
+    {
+      "name": "Camera holds the upper bound and never follows a descent",
+      "passed": true
+    },
+    {
+      "name": "All four station fixtures show times and continue without resetting the mountain",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "browser": "153.0.8010.0",
+  "scope": "Route reachability, reference trajectory, camera and synthetic station fixtures; not a full collectible-earning playthrough."
+}

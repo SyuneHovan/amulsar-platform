@@ -1,3 +1,22 @@
+# Current revision — Doodle reference profile (2026-10-23)
+
+Chromium 153.0.8010.0. **45/45 checks passed**, plus the flower/damage feedback checks. No uncaught JavaScript errors were recorded in the current regression, extra and reference suites.
+
+- `regression.cjs`: 18/18 (touch, layouts, save/restore, pause, restart, storage failures).
+- `extra.cjs`: 6/6 (keyboard, multitouch, real animation loop, moving collision, desktop sizing, quiz).
+- `campaign-mechanics.cjs`: 10/10 (four stations, 1280 main ledges, 96 objects, hazards, special ledges, deep save, legacy migration).
+- `pacing.cjs`: 6/6 (reference bounce, interrupted-stream regression, no long fixed-column climb, timer and restore).
+- `reference-feel.cjs`: 5/5 (all route steps reachable, varied field, 1.25 s return, camera, four synthetic station fixtures).
+- `flower-feedback.cjs`: flower shield remains visible without hurt flashing; damage and restart feedback pass.
+
+Measured apex: **205.664 units after 0.625 seconds**. Return to take-off height: **1.25 seconds**. Longest fixed-column run: 8 adjacent main rows; a passive opening run stopped making progress around altitude 1254, within the first chapter.
+
+Current route and exact calibration: `DOODLE_REFERENCE.md`. Synthetic station fixtures validate transitions and time displays; they do not demonstrate earning the collectibles. The historical greedy whole-campaign pilot does not reliably complete this new scattered profile. A full 96-collectible playthrough remains unverified.
+
+---
+
+# Historical report for the previous short-hop revision
+
 # Վերադարձրու Ամուլսարը — երկար, շարունակական տարբերակ
 
 Փորձարկման ամսաթիվ՝ 2026-10-23։ Բրաուզեր՝ Chromium 153.0.8010.0՝ Playwright-ով։

@@ -5,7 +5,7 @@
       "passed": true
     },
     {
-      "name": "Normal jump apex below 110 game units",
+      "name": "Normal jump matches width-scaled reference height",
       "passed": true
     },
     {
@@ -41,6 +41,6 @@
       "passed": true
     }
   ],
-  "jumpHeight": 96.72244399999988,
+  "jumpHeight": 205.66406249999972,
   "browser": "153.0.8010.0"
 }

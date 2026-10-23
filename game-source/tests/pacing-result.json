@@ -1,7 +1,7 @@
 {
   "results": [
     {
-      "name": "Slower ascent retains the previous jump range",
+      "name": "Reference bounce height and ascent time",
       "passed": true
     },
     {
@@ -26,9 +26,9 @@
     }
   ],
   "apex": {
-    "height": 96.72244399999988,
-    "seconds": 0.44166666666666665
+    "height": 205.66406249999972,
+    "seconds": 0.625
   },
-  "longestAutomaticChain": 6,
+  "longestAutomaticChain": 8,
   "browser": "153.0.8010.0"
 }
