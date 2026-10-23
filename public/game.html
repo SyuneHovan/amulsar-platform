@@ -87,7 +87,8 @@ document.querySelector('#pause').onclick=()=>{if(mode==='play')pause()};
 if(TEST)window.gameQA={state:()=>({mode,level,frame,score,collected,hearts,altitude,camera,skin,player:{...player},world:world.map(p=>({...p,currentX:platformX(p)})),objects:objects.map(o=>({...o})),save:{...save},boost,shield,damageFlash,gates:[...gates],chapterDone:[...chapterDone],lastLanded,needed:NEEDED,rows:ROWS,stageTimeTicks,phaseTimes:[...phaseTimes],physics:{gravity:GRAVITY,jump:JUMP,speed:HORIZONTAL_SPEED,acceleration:HORIZONTAL_ACCEL,spring:SPRING_JUMP,fallSpeed:FALL_SPEED,platformWidth:PLATFORM_WIDTH},progress:world.length?phaseProgress():0}),tick:(n=1)=>{for(let i=0;i<n;i++)update(.5);},input:d=>{keys.left=d<0;keys.right=d>0},ready:()=>assetsReady,hazardAt:(index,t)=>hazardStreamState(objects[index],t)};
 
 // One continuous mountain: four story stations along a longer climb.
-// Width-normalized reference: 640x960 web Doodle Jump, 1080 px/s bounce,
+// Width-normalized browser-reference approximation (not official mobile constants):
+// 640x960 viewport, 1080 px/s bounce,
 // 1728 px/s² gravity, 600 px/s steering, 114 px platforms. Units here are
 // world pixels per 60 Hz tick; rendering/physics remain fixed at 120 Hz.
 const LEGACY_RUN4='amulsar_doodle_run_v4',LEGACY_RUN5='amulsar_doodle_run_v5',CAMPAIGN_RUN='amulsar_doodle_run_v6',ROWS=320,NEEDED=24;
@@ -116,7 +117,7 @@ function buildMountain(){
   // Every main ledge is reachable with an ordinary jump; supports offer choices.
   const difficulty=clamp((stage+i/ROWS)/4,0,1),patch=Math.floor(i/9);
   const sparse=rnd(patch*83+800)>.64;
-  const gap=i===ROWS?65:(sparse?72+rnd(i+8)*(28+24*difficulty):31+rnd(i+8)*(35+19*difficulty));
+  const gap=i===ROWS?65:(sparse?88+rnd(i+8)*(36+34*difficulty):38+rnd(i+8)*(36+18*difficulty));
   y-=gap;const w=PLATFORM_WIDTH*(.94+rnd(i+1)*.12);
   let center=SW/2;
   for(let k=0;k<64;k++){
