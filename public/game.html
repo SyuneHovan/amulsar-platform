@@ -208,14 +208,17 @@ function prepareCampaignScenery(){if(campaignScenery.length)return;const names=[
 const campaignPlatformArt=new Map();
 function drawCampaignPlatform(name,x,y,w,h){
  const im=sprites[name];if(!im)return;
- let art=campaignPlatformArt.get(name);
+ // Cache at the displayed size; station ledges are much wider than normal ones.
+ // Bucket widths to reuse images without making a cache entry for every ledge.
+ const width=Math.ceil(w*2/32)*32,key=`${name}:${width}`;
+ let art=campaignPlatformArt.get(key);
  if(!art){
-  const width=Math.ceil(PLATFORM_WIDTH*2),height=width*65/122,pad=16;
+  const height=width*65/122,pad=16;
   const canvas=document.createElement('canvas');canvas.width=width+pad*2;canvas.height=Math.ceil(height)+pad*2;
   const q=canvas.getContext('2d');
   q.filter='contrast(1.12) saturate(1.06) drop-shadow(0 0 2px rgba(48,57,42,.70)) drop-shadow(0 6px 6px rgba(39,48,36,.28))';
   q.drawImage(im,pad,pad,width,height);
-  art={canvas,width,height,pad};campaignPlatformArt.set(name,art);
+  art={canvas,width,height,pad};campaignPlatformArt.set(key,art);
  }
  const sx=w/art.width,sy=h/art.height;
  ctx.drawImage(art.canvas,x-art.pad*sx,y-art.pad*sy,art.canvas.width*sx,art.canvas.height*sy);
