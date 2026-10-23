@@ -1,5 +1,6 @@
 // One continuous mountain: four story stations along a longer climb.
-// Width-normalized reference: 640x960 web Doodle Jump, 1080 px/s bounce,
+// Width-normalized browser-reference approximation (not official mobile constants):
+// 640x960 viewport, 1080 px/s bounce,
 // 1728 px/s² gravity, 600 px/s steering, 114 px platforms. Units here are
 // world pixels per 60 Hz tick; rendering/physics remain fixed at 120 Hz.
 const LEGACY_RUN4='amulsar_doodle_run_v4',LEGACY_RUN5='amulsar_doodle_run_v5',CAMPAIGN_RUN='amulsar_doodle_run_v6',ROWS=320,NEEDED=24;
@@ -28,7 +29,7 @@ function buildMountain(){
   // Every main ledge is reachable with an ordinary jump; supports offer choices.
   const difficulty=clamp((stage+i/ROWS)/4,0,1),patch=Math.floor(i/9);
   const sparse=rnd(patch*83+800)>.64;
-  const gap=i===ROWS?65:(sparse?72+rnd(i+8)*(28+24*difficulty):31+rnd(i+8)*(35+19*difficulty));
+  const gap=i===ROWS?65:(sparse?88+rnd(i+8)*(36+34*difficulty):38+rnd(i+8)*(36+18*difficulty));
   y-=gap;const w=PLATFORM_WIDTH*(.94+rnd(i+1)*.12);
   let center=SW/2;
   for(let k=0;k<64;k++){
@@ -117,7 +118,11 @@ function prepareCampaignScenery(){if(campaignScenery.length)return;const names=[
 function draw(){prepareCampaignScenery();const p=started?phaseProgress():0,n=started?level:3,mix=p*p*(3-2*p);ctx.drawImage(campaignScenery[n],0,0,SW,SH);ctx.globalAlpha=mix;ctx.drawImage(campaignScenery[n+1],0,0,SW,SH);ctx.globalAlpha=1;
 ctx.save();ctx.beginPath();ctx.rect(0,64,SW,SH-64);ctx.clip();ctx.translate(0,-camera);
 for(const ledge of world){const y=ledge.y;if(y-camera< -100||y-camera>SH+80||ledge.broken>22)continue;const x=platformX(ledge),f=ledge.w/122;ctx.save();if(ledge.broken){ctx.globalAlpha=1-ledge.broken/23;ctx.translate(0,ledge.broken*.7);}if(ledge.type==='vanishing'){const cycle=(frame+ledge.phase*40)%190;ctx.globalAlpha=cycle>132?.10:cycle>110?.5:1;}
-const kind=ledge.type==='station'?'finish':ledge.type==='corroded'?'crumble':ledge.type==='vanishing'?'vanishing':ledge.type==='start'?'normal':ledge.type;sprite(`platform-${ledge.stage}-${kind}`,x,y-59*f*.65,ledge.w,100*f*.65);ctx.restore();}
+const kind=ledge.type==='station'?'finish':ledge.type==='corroded'?'crumble':ledge.type==='vanishing'?'vanishing':ledge.type==='start'?'normal':ledge.type;
+// Follow the painted silhouette with a fine earthy edge and a soft shadow.
+// The saved context keeps this treatment local and preserves fading ledges.
+ctx.filter='contrast(1.12) saturate(1.06) drop-shadow(0 0 1px rgba(48,57,42,.70)) drop-shadow(0 3px 3px rgba(39,48,36,.28))';
+sprite(`platform-${ledge.stage}-${kind}`,x,y-59*f*.65,ledge.w,100*f*.65);ctx.restore();}
 for(const o of objects){if(o.got||o.stage>level||o.y-camera< -230||o.y-camera>SH+150)continue;const pos=objectPosition(o);ctx.save();if(o.kind==='hazard'){ctx.globalAlpha=pos.active?1:.24;const name='danger-'+o.variant;if(['drip','cyanideDrip'].includes(o.variant))sprite('danger-pipe',pos.x-13,o.y-150,26,24);if(!pos.active&&['drip','cyanideDrip','rock'].includes(o.variant)){ctx.restore();continue;}if(o.variant==='seep')sprite(name,pos.x-24,pos.y-8,48,17);else if(o.variant==='dust'||o.variant==='vent')sprite(name,pos.x-23,pos.y-17,46,34);else sprite(name,pos.x-15,pos.y-20,30,37);}else sprite(o.kind==='collect'?chapters[o.stage].icon:o.kind,pos.x-14,pos.y-17,28,33);ctx.restore();}
 if(damageFlash<=0||Math.floor(frame/7)%2===0){ctx.save();ctx.translate(player.x+14,player.y+19);ctx.rotate(clamp(player.vx*.018,-.13,.13));if(player.vx<-.25)ctx.scale(-1,1);const squash=landingSquash*.11;ctx.scale(1+squash,1-squash);const pose=player.vy< -3?1:player.vy>3?2:0;ctx.shadowColor='#fff9ec';ctx.shadowBlur=6;sprite(`hero-${skin}-${pose}`,-36,-61.5,72,90);ctx.restore();if(shield>0)sprite('shield',player.x+24,player.y-13,16,18);}
 for(const e of effects)if(e.kind==='collect'){ctx.globalAlpha=clamp(e.life/28,0,1);sprite(chapters[level].icon,e.x-13,e.y-23,26,32);}ctx.globalAlpha=1;ctx.restore();if(mode==='play'&&frame<100){ctx.fillStyle='#52675c';ctx.font='11px system-ui';ctx.textAlign='center';ctx.fillText('Ընտրիր հարթակ · սեղմիր ձախ կամ աջ',195,SH-105);ctx.textAlign='left';}}
