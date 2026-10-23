@@ -1,0 +1,30 @@
+{
+  "results": [
+    {
+      "name": "Keyboard after Start focuses game correctly",
+      "passed": true
+    },
+    {
+      "name": "Multi-touch releases independently",
+      "passed": true
+    },
+    {
+      "name": "Real requestAnimationFrame loop advances without test mode",
+      "passed": true
+    },
+    {
+      "name": "Swept collision with moving ledge",
+      "passed": true
+    },
+    {
+      "name": "Desktop canvas uses container size",
+      "passed": true
+    },
+    {
+      "name": "Wrong quiz answer explains and permits progression",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "browser": "153.0.8010.0"
+}

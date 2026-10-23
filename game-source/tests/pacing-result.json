@@ -1,0 +1,34 @@
+{
+  "results": [
+    {
+      "name": "Slower ascent retains the previous jump range",
+      "passed": true
+    },
+    {
+      "name": "No fixed horizontal column offers a long automatic climb",
+      "passed": true
+    },
+    {
+      "name": "Streams never jump backwards during an active fall",
+      "passed": true
+    },
+    {
+      "name": "A passive player cannot clear the opening route",
+      "passed": true
+    },
+    {
+      "name": "Timer advances during gameplay and stops during pause",
+      "passed": true
+    },
+    {
+      "name": "Elapsed stage time survives reload",
+      "passed": true
+    }
+  ],
+  "apex": {
+    "height": 96.72244399999988,
+    "seconds": 0.44166666666666665
+  },
+  "longestAutomaticChain": 6,
+  "browser": "153.0.8010.0"
+}

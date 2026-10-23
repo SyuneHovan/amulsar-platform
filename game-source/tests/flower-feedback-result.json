@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "checks": [
+    "Flower pickup grants shield without hurt flash",
+    "Hero drawn continuously across 12 animation frames after pickup",
+    "Real damage triggers hurt flash",
+    "Restart clears hurt flash"
+  ]
+}

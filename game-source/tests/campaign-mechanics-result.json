@@ -1,0 +1,46 @@
+{
+  "results": [
+    {
+      "name": "1280 route ledges, four stations and 96 required traces",
+      "passed": true
+    },
+    {
+      "name": "Normal jump apex below 110 game units",
+      "passed": true
+    },
+    {
+      "name": "Visible vanishing ledge supports a landing",
+      "passed": true
+    },
+    {
+      "name": "Absent vanishing ledge can be fallen through",
+      "passed": true
+    },
+    {
+      "name": "Corroded ledge breaks on landing with a solid alternate ledge",
+      "passed": true
+    },
+    {
+      "name": "All vanishing ledges have solid alternatives",
+      "passed": true
+    },
+    {
+      "name": "All seven themed hazard variants are present",
+      "passed": true
+    },
+    {
+      "name": "Legacy progress resumes at the corresponding longer chapter",
+      "passed": true
+    },
+    {
+      "name": "Deep campaign save restores below the former height limit",
+      "passed": true
+    },
+    {
+      "name": "Retry retains the score banked at earlier stations",
+      "passed": true
+    }
+  ],
+  "jumpHeight": 96.72244399999988,
+  "browser": "153.0.8010.0"
+}

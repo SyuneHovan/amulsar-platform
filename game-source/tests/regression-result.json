@@ -1,0 +1,77 @@
+{
+  "results": [
+    {
+      "name": "Six selectable skins and saved selection",
+      "passed": true
+    },
+    {
+      "name": "First chapter unlocked; later chapters locked",
+      "passed": true
+    },
+    {
+      "name": "Native touch right, cancel, and drag across canvas",
+      "passed": true
+    },
+    {
+      "name": "Pause freezes physics and reset inputs",
+      "passed": true
+    },
+    {
+      "name": "Run snapshot survives reload",
+      "passed": true
+    },
+    {
+      "name": "Restart restores initial chapter state",
+      "passed": true
+    },
+    {
+      "name": "Fall, game over, retry",
+      "passed": true
+    },
+    {
+      "name": "Corrupt run falls back to menu with explanation",
+      "passed": true
+    },
+    {
+      "name": "Invalid legacy save is sanitized",
+      "passed": true
+    },
+    {
+      "name": "Storage blocked: game still starts",
+      "passed": true
+    },
+    {
+      "name": "Asset-load error has a retry action",
+      "passed": true
+    },
+    {
+      "name": "Journal includes sources and no measured Amulsar allegation",
+      "passed": true
+    },
+    {
+      "name": "Layout 320x568",
+      "passed": true
+    },
+    {
+      "name": "Layout 360x800",
+      "passed": true
+    },
+    {
+      "name": "Layout 390x844",
+      "passed": true
+    },
+    {
+      "name": "Layout 412x915",
+      "passed": true
+    },
+    {
+      "name": "Layout 844x390",
+      "passed": true
+    },
+    {
+      "name": "Layout 1280x800",
+      "passed": true
+    }
+  ],
+  "errors": []
+}
