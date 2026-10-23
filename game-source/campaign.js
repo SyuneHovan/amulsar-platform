@@ -115,14 +115,28 @@ else{o.got=true;if(o.kind==='collect'){collected++;score+=100;if(level===3)shiel
 const target=player.y-SH*.48;if(target<camera)camera=target;altitude=Math.max(altitude,690-player.y);const station=world[gates[level]];if(player.y+player.h<station.y-40){summit();return;}if(player.y-camera>SH+65){shield=0;die();if(mode!=='play')return;}
 effects=effects.filter(e=>e.life>0);effects.forEach(e=>{e.life-=step;e.y-=.4*step;});if(frame-lastSave>=120){lastSave=frame;saveRun();}if(Math.floor(frame/3)!==Math.floor(prevFrame/3))updateHud();}
 function prepareCampaignScenery(){if(campaignScenery.length)return;const names=['campaign-ruins','landscape-1','landscape-2','landscape-3','landscape-3'],pals=[['#b0b3a8','#c2b393'],['#c4beb0','#d4c3a7'],['#d4d9d1','#e3dfca'],['#d9e5d7','#e4ebd1'],['#d8ece2','#ebefd4']];names.forEach((name,i)=>{const b=document.createElement('canvas');b.width=390;b.height=760;const q=b.getContext('2d'),g=q.createLinearGradient(0,0,0,760);g.addColorStop(0,pals[i][0]);g.addColorStop(1,pals[i][1]);q.fillStyle=g;q.fillRect(0,0,390,760);q.globalAlpha=i===4?.32:.27;q.filter='saturate(.48)';q.drawImage(sprites[name]||sprites['landscape-1'],-8,-12,406,784);campaignScenery.push(b);});}
+// Bake platform contrast and silhouette shadows once per artwork, rather than
+// running multi-pass canvas filters for every ledge on every animation frame.
+const campaignPlatformArt=new Map();
+function drawCampaignPlatform(name,x,y,w,h){
+ const im=sprites[name];if(!im)return;
+ let art=campaignPlatformArt.get(name);
+ if(!art){
+  const width=Math.ceil(PLATFORM_WIDTH*2),height=width*65/122,pad=16;
+  const canvas=document.createElement('canvas');canvas.width=width+pad*2;canvas.height=Math.ceil(height)+pad*2;
+  const q=canvas.getContext('2d');
+  q.filter='contrast(1.12) saturate(1.06) drop-shadow(0 0 2px rgba(48,57,42,.70)) drop-shadow(0 6px 6px rgba(39,48,36,.28))';
+  q.drawImage(im,pad,pad,width,height);
+  art={canvas,width,height,pad};campaignPlatformArt.set(name,art);
+ }
+ const sx=w/art.width,sy=h/art.height;
+ ctx.drawImage(art.canvas,x-art.pad*sx,y-art.pad*sy,art.canvas.width*sx,art.canvas.height*sy);
+}
 function draw(){prepareCampaignScenery();const p=started?phaseProgress():0,n=started?level:3,mix=p*p*(3-2*p);ctx.drawImage(campaignScenery[n],0,0,SW,SH);ctx.globalAlpha=mix;ctx.drawImage(campaignScenery[n+1],0,0,SW,SH);ctx.globalAlpha=1;
 ctx.save();ctx.beginPath();ctx.rect(0,64,SW,SH-64);ctx.clip();ctx.translate(0,-camera);
 for(const ledge of world){const y=ledge.y;if(y-camera< -100||y-camera>SH+80||ledge.broken>22)continue;const x=platformX(ledge),f=ledge.w/122;ctx.save();if(ledge.broken){ctx.globalAlpha=1-ledge.broken/23;ctx.translate(0,ledge.broken*.7);}if(ledge.type==='vanishing'){const cycle=(frame+ledge.phase*40)%190;ctx.globalAlpha=cycle>132?.10:cycle>110?.5:1;}
 const kind=ledge.type==='station'?'finish':ledge.type==='corroded'?'crumble':ledge.type==='vanishing'?'vanishing':ledge.type==='start'?'normal':ledge.type;
-// Follow the painted silhouette with a fine earthy edge and a soft shadow.
-// The saved context keeps this treatment local and preserves fading ledges.
-ctx.filter='contrast(1.12) saturate(1.06) drop-shadow(0 0 1px rgba(48,57,42,.70)) drop-shadow(0 3px 3px rgba(39,48,36,.28))';
-sprite(`platform-${ledge.stage}-${kind}`,x,y-59*f*.65,ledge.w,100*f*.65);ctx.restore();}
+drawCampaignPlatform(`platform-${ledge.stage}-${kind}`,x,y-59*f*.65,ledge.w,100*f*.65);ctx.restore();}
 for(const o of objects){if(o.got||o.stage>level||o.y-camera< -230||o.y-camera>SH+150)continue;const pos=objectPosition(o);ctx.save();if(o.kind==='hazard'){ctx.globalAlpha=pos.active?1:.24;const name='danger-'+o.variant;if(['drip','cyanideDrip'].includes(o.variant))sprite('danger-pipe',pos.x-13,o.y-150,26,24);if(!pos.active&&['drip','cyanideDrip','rock'].includes(o.variant)){ctx.restore();continue;}if(o.variant==='seep')sprite(name,pos.x-24,pos.y-8,48,17);else if(o.variant==='dust'||o.variant==='vent')sprite(name,pos.x-23,pos.y-17,46,34);else sprite(name,pos.x-15,pos.y-20,30,37);}else sprite(o.kind==='collect'?chapters[o.stage].icon:o.kind,pos.x-14,pos.y-17,28,33);ctx.restore();}
 if(damageFlash<=0||Math.floor(frame/7)%2===0){ctx.save();ctx.translate(player.x+14,player.y+19);ctx.rotate(clamp(player.vx*.018,-.13,.13));if(player.vx<-.25)ctx.scale(-1,1);const squash=landingSquash*.11;ctx.scale(1+squash,1-squash);const pose=player.vy< -3?1:player.vy>3?2:0;ctx.shadowColor='#fff9ec';ctx.shadowBlur=6;sprite(`hero-${skin}-${pose}`,-36,-61.5,72,90);ctx.restore();if(shield>0)sprite('shield',player.x+24,player.y-13,16,18);}
 for(const e of effects)if(e.kind==='collect'){ctx.globalAlpha=clamp(e.life/28,0,1);sprite(chapters[level].icon,e.x-13,e.y-23,26,32);}ctx.globalAlpha=1;ctx.restore();if(mode==='play'&&frame<100){ctx.fillStyle='#52675c';ctx.font='11px system-ui';ctx.textAlign='center';ctx.fillText('Ընտրիր հարթակ · սեղմիր ձախ կամ աջ',195,SH-105);ctx.textAlign='left';}}
