@@ -118,6 +118,12 @@ effects=effects.filter(e=>e.life>0);effects.forEach(e=>{e.life-=step;e.y-=.4*ste
 function prepareCampaignScenery(){if(campaignScenery.length)return;const names=['campaign-ruins','landscape-1','landscape-2','landscape-3','landscape-3'],pals=[['#b0b3a8','#c2b393'],['#c4beb0','#d4c3a7'],['#d4d9d1','#e3dfca'],['#d9e5d7','#e4ebd1'],['#d8ece2','#ebefd4']];names.forEach((name,i)=>{const b=document.createElement('canvas');b.width=390;b.height=760;const q=b.getContext('2d'),g=q.createLinearGradient(0,0,0,760);g.addColorStop(0,pals[i][0]);g.addColorStop(1,pals[i][1]);q.fillStyle=g;q.fillRect(0,0,390,760);q.globalAlpha=i===4?.32:.27;q.filter='saturate(.48)';q.drawImage(sprites[name]||sprites['landscape-1'],-8,-12,406,784);campaignScenery.push(b);});}
 // Bake platform contrast and silhouette shadows once per artwork, rather than
 // running multi-pass canvas filters for every ledge on every animation frame.
+// Rasterize station SVGs at their largest on-screen size before loadArt().
+// Keeping the viewBox preserves the artwork; only four decoded sprites grow.
+for(let stage=0;stage<4;stage++){
+ const name=`platform-${stage}-finish`;
+ ART[name]=ART[name].replace('width="122" height="100"','width="976" height="800"');
+}
 const campaignPlatformArt=new Map();
 function drawCampaignPlatform(name,x,y,w,h){
  const im=sprites[name];if(!im)return;
