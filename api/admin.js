@@ -51,9 +51,9 @@ export default async function handler(req,res){
    const current=await gh(files[type]);return res.status(200).json({email,items:JSON.parse(dec(current.content))});
   }
   const action=req.body?.action,id=req.body?.id,data=req.body?.item||{};
-  if(!['verify','reject','delete','create','createFromLink'].includes(action))return res.status(400).json({error:'Անհայտ գործողութիւն'});
+  if(!['verify','reject','delete','create','createFromLink','publishSite'].includes(action))return res.status(400).json({error:'Անհայտ գործողութիւն'});
   if(!['create','createFromLink'].includes(action)&&(!id||typeof id!=='string'))return res.status(400).json({error:'Նյութի ID-ն բացակայում է'});
-  if(['verify','reject'].includes(action)&&type!=='news')return res.status(400).json({error:'Ստուգումը հասանելի է միայն լուրերի համար'});
+  if(['verify','reject','publishSite'].includes(action)&&type!=='news')return res.status(400).json({error:'Ստուգումը հասանելի է միայն լուրերի համար'});
   let created;
   if(action==='createFromLink'){
    if(type!=='news')return res.status(400).json({error:'Միայն նորությունների համար'});
@@ -76,6 +76,7 @@ export default async function handler(req,res){
     const i=items.findIndex(x=>x.id===id);
     if(i<0)return res.status(404).json({error:'Նյութը չի գտնվել։ Թարմացրու ցանկը'});
     if(action==='delete')items.splice(i,1);
+    else if(action==='publishSite'){if(items[i].verificationStatus==='false')return res.status(400).json({error:'Մերժված նյութը հրապարակել հնարավոր չէ'});items[i].verificationStatus='verified';items[i].sitePublishedAt=new Date().toISOString();items[i].reviewedBy=email}
     else{items[i].verificationStatus=action==='verify'?'verified':'false';items[i].reviewedAt=new Date().toISOString();items[i].reviewedBy=email}
    }
    try{
