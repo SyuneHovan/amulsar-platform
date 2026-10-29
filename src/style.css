@@ -4942,3 +4942,9 @@ svg.leaflet-zoom-animated {
         print-color-adjust: exact
     }
 }
+
+.admin-wrap .admin-tg-toolbar{display:flex;flex-wrap:wrap;gap:5px;margin:8px 0}
+.admin-wrap .admin-tg-toolbar button{border:1px solid #a99d8d;border-radius:7px;padding:6px 10px;background:transparent;color:inherit;font-size:12px;font-weight:700;cursor:pointer}
+.admin-wrap .admin-tg-toolbar button:hover{background:#b7ab9730}
+.admin-wrap .admin-tg-toolbar button:disabled{opacity:.4}
+.admin-wrap .admin-card .admin-panel label small{font-size:11px;font-weight:400;opacity:.8}
