@@ -383,3 +383,8 @@
 /* Compact consistent icon-only editorial actions */
 .admin-wrap .admin-card-actions{display:flex!important;flex-wrap:wrap!important;justify-content:flex-end!important;gap:8px!important}
 .admin-wrap .admin-card-actions button,.admin-wrap .admin-card-actions .admin-approve,.admin-wrap .admin-card-actions .admin-reject,.admin-wrap .admin-card-actions .admin-delete{width:44px!important;height:44px!important;min-height:44px!important;min-width:44px!important;max-width:44px!important;flex:0 0 44px!important;padding:0!important;display:grid!important;place-items:center!important;font-size:21px!important;line-height:1!important;margin:0!important;border-radius:10px!important}
+
+/* Keep the news CTA label and arrow on the same line in the header. */
+.header .nav-links .nav-cta{display:inline-flex;align-items:center;justify-content:center;gap:10px;white-space:nowrap;flex-wrap:nowrap}
+.header .nav-links .nav-cta span{display:inline-block;flex:0 0 auto;margin-left:0;white-space:nowrap}
+@media(max-width:800px){.header .nav-links .nav-cta{display:flex;width:100%}}
