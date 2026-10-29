@@ -379,3 +379,7 @@
 .admin-wrap .admin-card .admin-panel textarea{display:block;width:100%;min-width:0;max-width:100%;box-sizing:border-box;padding:12px;font:inherit;border:1px solid #cfc6b8;border-radius:10px;background:var(--admin-paper,#fff);color:var(--admin-ink,#302822)}
 .admin-wrap .admin-card .admin-panel .admin-primary{margin-top:12px;max-width:100%;white-space:normal}
 @media(max-width:650px){.admin-wrap .admin-card-actions{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.admin-wrap .admin-card-actions .admin-approve{min-height:64px}.admin-wrap .admin-card-actions .admin-reject,.admin-wrap .admin-card-actions .admin-delete{width:100%!important;min-height:44px}.admin-wrap .admin-card-actions .admin-delete{margin:0}}
+
+/* Compact consistent icon-only editorial actions */
+.admin-wrap .admin-card-actions{display:flex!important;flex-wrap:wrap!important;justify-content:flex-end!important;gap:8px!important}
+.admin-wrap .admin-card-actions button,.admin-wrap .admin-card-actions .admin-approve,.admin-wrap .admin-card-actions .admin-reject,.admin-wrap .admin-card-actions .admin-delete{width:44px!important;height:44px!important;min-height:44px!important;min-width:44px!important;max-width:44px!important;flex:0 0 44px!important;padding:0!important;display:grid!important;place-items:center!important;font-size:21px!important;line-height:1!important;margin:0!important;border-radius:10px!important}
