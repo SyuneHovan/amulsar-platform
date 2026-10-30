@@ -36,14 +36,19 @@ const approved=[
 const locations=['"Ամուլսար"','"Ջերմուկ"','"Գնդեվազ"','"Սարավան"','"Գորայք"','"Սառնակունք"'];
 // Batch place terms to bound request count and avoid exhausting Vercel's execution time.
 const placeQuery='('+locations.join(' OR ')+')';
-const topics=approved.map(p=>({publisher:p,query:'site:'+p.domain+(p.account?' "'+p.account+'"':'')+' '+placeQuery+' when:7d'}));
+const topics=approved.filter(p=>p.domain!=='facebook.com').flatMap(p=>[
+ {publisher:p,query:'site:'+p.domain+' Ամուլսար when:30d'},
+ {publisher:p,query:'site:'+p.domain+' (Ջերմուկ OR Գնդեվազ OR երկրաշարժ) when:7d'}
+]);
+// Facebook is not reliably indexed by Google News RSS; don't count these as working feeds.
+
 const feed=q=>'https://news.google.com/rss/search?q='+encodeURIComponent(q)+'&hl=hy&gl=AM&ceid=AM:hy';
 const gh=async(method,body)=>{const r=await fetch('https://api.github.com/repos/'+REPO+'/contents/'+FILE,{method,headers:{Accept:'application/vnd.github+json',Authorization:'Bearer '+process.env.GITHUB_TOKEN,'Content-Type':'application/json','X-GitHub-Api-Version':'2022-11-28'},...(body?{body:JSON.stringify(body)}:{})});if(!r.ok)throw new Error('GitHub '+r.status+': '+(await r.text()).slice(0,100));return r.json()};
 const kind=source=>/primeminister\.am|gov\.am|environment\.gov\.am|economy\.gov\.am/i.test(source)?'Պետական աղբյուր':/lydianarmenia\.com/i.test(source)?'Ընկերության հայտարարություն':/ebrd\.com/i.test(source)?'Միջազգային կազմակերպություն':'Լրատվական կամ մասնագիտական աղբյուր';
 function sourceMatches(name,publisher,url){
  const n=normalized(name).replace(/\\s/g,'');
  if(publisher.domain==='facebook.com')return normalized(url).includes(normalized(publisher.account).replace(/\\s/g,''))||n.includes(normalized(publisher.account).replace(/\\s/g,''));
- return publisher.aliases.some(label=>n.includes(normalized(label).replace(/\\s/g,'')));
+ return publisher.aliases.some(label=>n.includes(normalized(label).replace(/\\s/g,''))) || n.includes(normalized(publisher.name).replace(/\\s/g,''));
 }
 async function discover({publisher,query:q}){
  const response=await fetch(feed(q),{headers:{'User-Agent':'AmulsarNewsMonitor/2.0'},signal:AbortSignal.timeout(9000)});
@@ -64,7 +69,7 @@ export default async function handler(req,res){
   const feeds=await Promise.allSettled(topics.map(discover));const failures=feeds.filter(x=>x.status==='rejected');
   for(const f of failures)console.warn('Feed unavailable:',String(f.reason).slice(0,120));
   const all=feeds.flatMap(x=>x.status==='fulfilled'?x.value:[]);
-  if(!all.length)throw Error('All RSS feeds empty or unavailable');
+  if(!all.length){console.warn('RSS returned no matching articles; check source attribution and Google News indexing');return res.status(200).json({ok:true,added:0,feedsOk:feeds.length-failures.length,feedsFailed:failures.length,warning:'No matching RSS items',errors:failures.slice(0,4).map(f=>String(f.reason).slice(0,100))})}
   const current=await gh('GET'),existing=JSON.parse(dec(current.content));
   const knownUrls=new Set(existing.map(x=>x.sourceUrl));const knownTitles=new Set(existing.map(x=>normalized(x.originalTitle||x.title)));
   const unique=[],seenUrls=new Set(),seenTitles=new Set();
