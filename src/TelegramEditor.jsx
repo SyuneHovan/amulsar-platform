@@ -41,8 +41,8 @@ export default function TelegramEditor({value,onChange,disabled,onDraft}){
  const command=(kind)=>{
   restore();
   if(kind==='link'){
-   const url=window.prompt('?????? (https://...)');if(!url)return;
-   if(!/^https?:\/\//i.test(url)){window.alert('?????????? http:// ??? https:// ?????');return;}
+   const url=window.prompt('Հղումը (https://...)');if(!url)return;
+   if(!/^https?:\/\//i.test(url)){window.alert('Մուտքագրիր http:// կամ https:// հղում');return;}
    document.execCommand('createLink',false,url);
   }else if(['code','pre','spoiler'].includes(kind)){
    const s=window.getSelection();if(!s.rangeCount||s.isCollapsed)return;
@@ -53,15 +53,15 @@ export default function TelegramEditor({value,onChange,disabled,onDraft}){
   changed();
  };
  const insert=text=>{restore();document.execCommand('insertText',false,text);changed();};
- const controls=[['bold','???','B'],['italic','???','??'],['underline','???????','U'],['strikeThrough','???????','S?'],['spoiler','???????','???????'],['code','???','???'],['pre','???? ????','????'],['quote','?????????','?'],['link','?????','??'],['unlink','???????? ??????','????? ??????'],['removeFormat','?????? ??????????','??????'],['undo','???','?'],['redo','????','?']];
+ const controls=[['bold','Թավ','B'],['italic','Շեղ','𝘐'],['underline','Ընդգծել','U'],['strikeThrough','Ջնջագիծ','S̶'],['spoiler','Թաքցնել','Թաքցնել'],['code','Կոդ','Կոդ'],['pre','Կոդի բլոկ','Բլոկ'],['quote','Մեջբերում','❝'],['link','Հղում','🔗'],['unlink','Հեռացնել հղումը','Հանել հղումը'],['removeFormat','Մաքրել ձևավորումը','Մաքրել'],['undo','Հետ','↶'],['redo','Առաջ','↷']];
  return <div className="tg-composer">
-  <p>???? ?????? ? ?????? ??????????: ?????? ??????? ?? ???????? ?????:</p>
-  <div className="admin-tg-toolbar" role="toolbar" aria-label="Telegram ?????? ?????????">
+  <p>Նշիր տեքստը և ընտրիր ձևավորումը։ Այստեղ տեսնում ես պատրաստի տեսքը։</p>
+  <div className="admin-tg-toolbar" role="toolbar" aria-label="Telegram տեքստի ձևավորում">
    {controls.map(([kind,title,label])=><button type="button" key={kind} title={title} aria-label={title} disabled={disabled} onMouseDown={e=>{e.preventDefault();remember();}} onClick={()=>command(kind)}>{label}</button>)}
-   <button type="button" disabled={disabled} aria-expanded={emoji} onMouseDown={e=>{e.preventDefault();remember();}} onClick={()=>setEmoji(!emoji)}>?? ?????</button>
-   <button type="button" disabled={disabled} onMouseDown={e=>{e.preventDefault();remember();}} onClick={onDraft}>? ?? ??????</button>
+   <button type="button" disabled={disabled} aria-expanded={emoji} onMouseDown={e=>{e.preventDefault();remember();}} onClick={()=>setEmoji(!emoji)}>🙂 Էմոջի</button>
+   <button type="button" disabled={disabled} onMouseDown={e=>{e.preventDefault();remember();}} onClick={onDraft}>✨ ԱԲ սևագիր</button>
   </div>
-  {emoji&&<div className="admin-tg-emoji">{['??','??','??','??','??','??','??','?','?','??','??','?','??','??'].map(e=><button type="button" key={e} disabled={disabled} onMouseDown={event=>event.preventDefault()} onClick={()=>insert(e)}>{e}</button>)}</div>}
-  <div ref={ref} className="tg-editor" role="textbox" aria-label="Telegram ??????? ?????" aria-multiline="true" contentEditable={!disabled} suppressContentEditableWarning onInput={changed} onMouseUp={remember} onKeyUp={remember} onBlur={remember} onPaste={e=>{e.preventDefault();insert(e.clipboardData.getData('text/plain'));}} onDrop={e=>e.preventDefault()}/>
+  {emoji&&<div className="admin-tg-emoji">{['🌿','⛰️','💧','📢','⚠️','📍','🔎','✅','❌','💚','🌍','✊','📅','🔗'].map(e=><button type="button" key={e} disabled={disabled} onMouseDown={event=>event.preventDefault()} onClick={()=>insert(e)}>{e}</button>)}</div>}
+  <div ref={ref} className="tg-editor" role="textbox" aria-label="Telegram գրառման տեքստ" aria-multiline="true" contentEditable={!disabled} suppressContentEditableWarning onInput={changed} onMouseUp={remember} onKeyUp={remember} onBlur={remember} onPaste={e=>{e.preventDefault();insert(e.clipboardData.getData('text/plain'));}} onDrop={e=>e.preventDefault()}/>
  </div>;
 }
