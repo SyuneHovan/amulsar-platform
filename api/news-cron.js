@@ -58,9 +58,9 @@ async function discover({publisher,query:q}){
 }
 
 const directPages=[
- {publisher:approved[4],url:'https://www.ecolur.org/en/news/amulsar/',pattern:/\\/en\\/news\\/(?:amulsar\\/)?[^?#]+/i},
- {publisher:approved[0],url:'https://www.hetq.am/hy/tag/Amulsar',pattern:/\\/hy\\/article\\/\\d+/i},
- {publisher:approved[6],url:'https://infocom.am/infotag/217/',pattern:/\\/\\d{5,}\\/?$/}
+ {publisher:approved[4],url:'https://www.ecolur.org/en/news/amulsar/',pattern:new RegExp('^/en/news/')},
+ {publisher:approved[0],url:'https://www.hetq.am/hy/tag/Amulsar',pattern:new RegExp('^/hy/article/[0-9]+')},
+ {publisher:approved[6],url:'https://infocom.am/infotag/217/',pattern:new RegExp('/[0-9]{5,}/?$')}
 ];
 function extractMeta(html,key){
  for(const tag of html.match(/<meta\b[^>]*>/gi)||[]){
