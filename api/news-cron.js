@@ -126,7 +126,7 @@ export default async function handler(req,res){
     if(result.title.length<8||result.title.length>150||result.summary.length<35||result.summary.length>650)continue;
     const key=normalized(result.title);if(acceptedKeys.some(k=>k===key||k.includes(key)||key.includes(k)))continue;
     acceptedKeys.push(key);
-    accepted.push({id:crypto.randomUUID(),title:result.title,date:x.date,summary:result.summary,sourceUrl:x.url,sourceName:x.publisher,sourceType:kind(x.publisher),originalTitle:x.title,verificationStatus:'unverified',generatedByAI:true,discoveredAt:new Date().toISOString()});
+    accepted.push({id:crypto.randomUUID(),title:result.title,date:x.date,summary:result.summary,sourceUrl:x.url,sourceName:x.publisher,sourceType:kind(x.publisher),originalTitle:x.title,verificationStatus:'unverified',telegramDraft:'📰 <b>'+result.title.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</b>\\n\\n'+result.summary.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'),generatedByAI:true,discoveredAt:new Date().toISOString()});
     if(accepted.length>=MAX_NEW)break;
    }
   }
